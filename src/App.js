@@ -49,7 +49,8 @@ const navigationConfig = [
             {id: 'product-bom', name: 'BOM 管理', path: '/product/bom'},
             {id: 'product-brand', name: '品牌管理', path: '/product/brand'},
             {id: 'product-structure', name: '产品结构分类', path: '/product/structure'},
-            {id: 'product-template', name: '类目属性模板管理', path: '/product/template'}
+            {id: 'product-template', name: '类目属性模板管理', path: '/product/template'},
+            {id: 'product-tag', name: '产品标签', path: '/product/tag'}
         ]
     },
     {
@@ -58,7 +59,11 @@ const navigationConfig = [
         icon: TrendingUp,
         children: [
             {id: 'sales-target', name: '销售目标', path: '/sales/target'},
-            {id: 'sales-analysis', name: '销售达成分析', path: '/sales/analysis'}
+            {id: 'sales-analysis', name: '销售达成分析', path: '/sales/analysis'},
+            {id: 'sales-data-aggregation', name: '数据聚合分析', path: '/sales/data-aggregation'},
+            {id: 'sales-slow-moving', name: '滞销分析', path: '/sales/slow-moving'},
+            {id: 'sales-forecast', name: '销量预测', path: '/sales/forecast'},
+            {id: 'sales-plan-dashboard', name: '计划测算看板', path: '/sales/plan-dashboard'}
         ]
     },
     {
@@ -66,7 +71,10 @@ const navigationConfig = [
         name: '供应链采购管理',
         icon: ShoppingCart,
         children: [
-            {id: 'supplier', name: '供应商管理', path: '/procurement/supplier'}
+            {id: 'supplier', name: '供应商管理', path: '/procurement/supplier'},
+            {id: 'sku-iteration', name: 'SKU迭代管理', path: '/procurement/sku-iteration'},
+            {id: 'purchase-plan-tracking', name: '采购计划执行跟进', path: '/procurement/plan-tracking'},
+            {id: 'supplier-performance', name: '供应商绩效', path: '/procurement/supplier-performance'}
         ]
     },
     {
@@ -74,10 +82,27 @@ const navigationConfig = [
         name: '物流与报关',
         icon: Truck,
         children: [
-            {id: 'logistics-plan', name: '物流计划执行', path: '/logistics/plan'}
+            {id: 'logistics-plan', name: '物流计划执行', path: '/logistics/plan'},
+            {id: 'logistics-stock-calc', name: '备货试算', path: '/logistics/stock-calc'},
+            {id: 'logistics-cross-border', name: '物流单-跨境', path: '/logistics/cross-border'},
+            {id: 'logistics-domestic', name: '物流单-国内', path: '/logistics/domestic'},
+            {id: 'logistics-customs-export', name: '报关管理', path: '/logistics/customs-export'},
+            {id: 'logistics-customs-import', name: '清关管理', path: '/logistics/customs-import'},
+            {id: 'logistics-shelf-claim', name: '上架索赔', path: '/logistics/shelf-claim'},
+            {id: 'logistics-reconciliation', name: '物流对账', path: '/logistics/reconciliation'},
+            {id: 'logistics-provider-info', name: '物流商基础信息', path: '/logistics/provider-info'}
         ]
     },
-    {id: 'quality', name: '质量管理', icon: TestTube, path: '/quality'},
+    {
+        id: 'quality',
+        name: '质量管理',
+        icon: TestTube,
+        children: [
+            {id: 'quality-inbound', name: '入库质检', path: '/quality/inbound'},
+            {id: 'quality-complaint', name: '客诉质量', path: '/quality/complaint'},
+            {id: 'quality-analysis', name: '质量分析', path: '/quality/analysis'}
+        ]
+    },
     {
         id: 'finance-gov',
         name: '财务治理',
@@ -87,20 +112,48 @@ const navigationConfig = [
             {id: 'cost-center', name: '成本中心', path: '/finance-gov/cost-center'},
             {id: 'allocation-rule', name: '分摊规则', path: '/finance-gov/allocation-rule'},
             {id: 'expense-category', name: '费用类别', path: '/finance-gov/expense-category'},
-            {id: 'expense-fact', name: '费用事实', path: '/finance-gov/expense-fact'}
+            {id: 'expense-fact', name: '费用事实', path: '/finance-gov/expense-fact'},
+            {id: 'budget-version', name: '预算版本管理', path: '/finance-gov/budget-version'}
         ]
     },
-    {id: 'finance-analysis', name: '财务与经营分析', icon: PieChart, path: '/finance-analysis', badge: '只读'},
+    {
+        id: 'finance-analysis',
+        name: '财务与经营分析',
+        icon: PieChart,
+        badge: '只读',
+        children: [
+            {id: 'finance-revenue', name: '收入分析', path: '/finance-analysis/revenue'},
+            {id: 'finance-cost', name: '成本分析', path: '/finance-analysis/cost'},
+            {id: 'finance-profit', name: '利润分析', path: '/finance-analysis/profit'},
+            {id: 'finance-achievement', name: '经营达成情况', path: '/finance-analysis/achievement'}
+        ]
+    },
     {
         id: 'organization',
         name: '组织与权限',
         icon: Users,
         children: [
-            {id: 'org-structure', name: '组织架构管理', path: '/organization/structure'}
+            {id: 'org-structure', name: '组织架构管理', path: '/organization/structure'},
+            {id: 'org-user', name: '用户管理', path: '/organization/user'},
+            {id: 'org-role', name: '角色&权限', path: '/organization/role'}
         ]
     },
     {id: 'approval', name: '审批与任务', icon: CheckSquare, path: '/approval'},
-    {id: 'settings', name: '系统设置', icon: Settings, badge: 'IT专用', path: '/settings'}
+    {
+        id: 'settings',
+        name: '系统设置',
+        icon: Settings,
+        badge: 'IT专用',
+        children: [
+            {id: 'settings-basic', name: '基础配置', path: '/settings/basic'},
+            {id: 'settings-dict', name: '数据字典', path: '/settings/dict'},
+            {id: 'settings-enum', name: '枚举与规则', path: '/settings/enum'},
+            {id: 'settings-sync', name: '接口同步', path: '/settings/sync'},
+            {id: 'settings-params', name: '参数设置', path: '/settings/params'},
+            {id: 'settings-scheduler', name: '定时任务', path: '/settings/scheduler'},
+            {id: 'settings-log', name: '系统日志', path: '/settings/log'}
+        ]
+    }
 ];
 
 const NavItem = ({item, level = 0, isActive, onNavigate, expandedItems, toggleExpand}) => {
