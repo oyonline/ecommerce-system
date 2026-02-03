@@ -34,6 +34,7 @@ import ExpenseCategoryPage from './pages/ExpenseCategoryPage';
 import OrganizationManagementPage from './pages/OrganizationManagementPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 import SkuDetailPage from './pages/SkuDetailPage.simple';
+import SalesTargetPage from './pages/SalesTargetPage';
 
 // 导航配置
 const navigationConfig = [
@@ -223,6 +224,8 @@ function App() {
                 return <ExpenseCategoryPage />;
             case '/organization/structure':
                 return <OrganizationManagementPage />;
+            case '/sales/target':
+                return <SalesTargetPage />;
             default:
                 return <PlaceholderPage pageName={currentPageName} path={currentPath} />;
         }
