@@ -35,6 +35,7 @@ import OrganizationManagementPage from './pages/OrganizationManagementPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 import SkuDetailPage from './pages/SkuDetailPage.simple';
 import SalesTargetPage from './pages/SalesTargetPage';
+import ProductTagPage from './pages/ProductTagPage';
 
 // 导航配置
 const navigationConfig = [
@@ -249,6 +250,8 @@ function App() {
                 return <ProductStructurePage />;
             case '/product/template':
                 return <CategoryTemplatePage />;
+            case '/product/tag':
+                return <ProductTagPage />;
             case '/finance-gov/mapping':
                 return <StoreDeptMappingPage />;
             case '/finance-gov/cost-center':
