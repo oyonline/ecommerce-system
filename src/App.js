@@ -37,6 +37,7 @@ import SkuDetailPage from './pages/SkuDetailPage.simple';
 import SalesTargetPage from './pages/SalesTargetPage';
 import ProductTagPage from './pages/ProductTagPage';
 import CodingRulePage from './pages/CodingRulePage';
+import ProductAttributePage from './pages/ProductAttributePage';
 
 // 导航配置
 const navigationConfig = [
@@ -53,7 +54,8 @@ const navigationConfig = [
             {id: 'product-structure', name: '产品结构分类', path: '/product/structure'},
             {id: 'product-template', name: '类目属性模板管理', path: '/product/template'},
             {id: 'product-tag', name: '产品标签', path: '/product/tag'},
-            {id: 'product-coding-rule', name: '编码规则', path: '/product/coding-rule'}
+            {id: 'product-coding-rule', name: '编码规则', path: '/product/coding-rule'},
+            {id: 'product-attribute', name: '属性管理', path: '/product/attribute'}
         ]
     },
     {
@@ -256,6 +258,8 @@ function App() {
                 return <ProductTagPage />;
             case '/product/coding-rule':
                 return <CodingRulePage />;
+            case '/product/attribute':
+                return <ProductAttributePage />;
             case '/finance-gov/mapping':
                 return <StoreDeptMappingPage />;
             case '/finance-gov/cost-center':
