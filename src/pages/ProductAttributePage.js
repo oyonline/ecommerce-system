@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import {
     Search, Plus, Edit2, Trash2, X, Save, Download, Upload,
     Tag, List, Hash, Type, Calendar, ToggleLeft, CheckSquare,
-    ChevronDown, ChevronRight, Copy, MoreHorizontal, Filter,
-    AlertCircle, Check, Layers, Settings, Database
+    ChevronDown, ChevronRight, Copy, MoreHorizontal,
+    AlertCircle, Check, Layers, Settings, Database, GripVertical
 } from 'lucide-react';
 
 // 轻量工具：className 拼接
@@ -13,14 +13,13 @@ const cn = (...args) => args.filter(Boolean).join(' ');
 
 // --------------- 属性类型配置 ---------------
 const ATTRIBUTE_TYPES = [
-    { id: 'text', name: '文本', icon: Type, description: '单行文本输入' },
-    { id: 'textarea', name: '多行文本', icon: List, description: '多行文本输入' },
-    { id: 'number', name: '数字', icon: Hash, description: '数值输入，支持单位' },
-    { id: 'single_select', name: '单选', icon: CheckSquare, description: '单选下拉列表' },
-    { id: 'multi_select', name: '多选', icon: CheckSquare, description: '多选复选框' },
-    { id: 'date', name: '日期', icon: Calendar, description: '日期选择器' },
-    { id: 'boolean', name: '是/否', icon: ToggleLeft, description: '布尔值开关' },
-    { id: 'image', name: '图片', icon: Tag, description: '图片上传' },
+    { id: 'text', name: '文本', icon: Type, description: '单行文本输入', hasOptions: false },
+    { id: 'textarea', name: '多行文本', icon: List, description: '多行文本输入', hasOptions: false },
+    { id: 'number', name: '数字', icon: Hash, description: '数值输入，支持单位', hasOptions: false },
+    { id: 'single_select', name: '单选', icon: CheckSquare, description: '单选下拉列表', hasOptions: true },
+    { id: 'multi_select', name: '多选', icon: CheckSquare, description: '多选复选框', hasOptions: true },
+    { id: 'date', name: '日期', icon: Calendar, description: '日期选择器', hasOptions: false },
+    { id: 'boolean', name: '是/否', icon: ToggleLeft, description: '布尔值开关', hasOptions: false },
 ];
 
 // --------------- 属性分组配置 ---------------
@@ -30,50 +29,165 @@ const ATTRIBUTE_GROUPS = [
     { id: 'sales', name: '销售属性', description: '影响SKU生成的属性', color: 'purple' },
     { id: 'logistics', name: '物流属性', description: '物流相关属性', color: 'orange' },
     { id: 'quality', name: '质量属性', description: '质量检验相关属性', color: 'red' },
-    { id: 'custom', name: '自定义属性', description: '用户自定义属性', color: 'gray' },
 ];
 
-// --------------- 属性数据 ---------------
+// --------------- 属性数据（包含选项的简写编码） ---------------
 const initialAttributes = [
     // 基础属性
-    { id: '1', code: 'BRAND', name: '品牌', shortCode: 'BR', groupId: 'basic', type: 'single_select', required: true, isActive: true, options: ['品牌A', '品牌B', '品牌C', '自有品牌'], unit: '', refCount: 1256, description: '产品所属品牌', createdAt: '2024-01-10', updatedAt: '2024-03-15' },
-    { id: '2', code: 'PRODUCT_NAME', name: '产品名称', shortCode: 'PN', groupId: 'basic', type: 'text', required: true, isActive: true, options: [], unit: '', refCount: 1256, description: '产品的完整名称', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '3', code: 'PRODUCT_NAME_EN', name: '英文名称', shortCode: 'PNE', groupId: 'basic', type: 'text', required: false, isActive: true, options: [], unit: '', refCount: 1180, description: '产品英文名称', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '4', code: 'MODEL', name: '型号', shortCode: 'MD', groupId: 'basic', type: 'text', required: true, isActive: true, options: [], unit: '', refCount: 1256, description: '产品型号', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '5', code: 'MATERIAL', name: '材质', shortCode: 'MT', groupId: 'basic', type: 'multi_select', required: false, isActive: true, options: ['塑料', '金属', '木材', '玻璃', '布料', '皮革', '硅胶', '陶瓷'], unit: '', refCount: 890, description: '产品主要材质', createdAt: '2024-01-10', updatedAt: '2024-02-20' },
-    { id: '6', code: 'ORIGIN', name: '产地', shortCode: 'OG', groupId: 'basic', type: 'single_select', required: false, isActive: true, options: ['中国', '越南', '印度', '泰国', '马来西亚'], unit: '', refCount: 756, description: '产品生产地', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
+    {
+        id: '1', code: 'BRAND', name: '品牌', shortCode: 'BR', groupId: 'basic', type: 'single_select',
+        required: true, isActive: true, unit: '', refCount: 1256, description: '产品所属品牌',
+        options: [
+            { id: 'o1', value: '品牌A', code: 'A', isActive: true, sort: 1 },
+            { id: 'o2', value: '品牌B', code: 'B', isActive: true, sort: 2 },
+            { id: 'o3', value: '品牌C', code: 'C', isActive: true, sort: 3 },
+            { id: 'o4', value: '自有品牌', code: 'OWN', isActive: true, sort: 4 },
+        ],
+        createdAt: '2024-01-10', updatedAt: '2024-03-15'
+    },
+    {
+        id: '2', code: 'MATERIAL', name: '材质', shortCode: 'MT', groupId: 'basic', type: 'multi_select',
+        required: false, isActive: true, unit: '', refCount: 890, description: '产品主要材质',
+        options: [
+            { id: 'o1', value: '塑料', code: 'PL', isActive: true, sort: 1 },
+            { id: 'o2', value: '金属', code: 'MT', isActive: true, sort: 2 },
+            { id: 'o3', value: '木材', code: 'WD', isActive: true, sort: 3 },
+            { id: 'o4', value: '玻璃', code: 'GL', isActive: true, sort: 4 },
+            { id: 'o5', value: '布料', code: 'FB', isActive: true, sort: 5 },
+            { id: 'o6', value: '皮革', code: 'LT', isActive: true, sort: 6 },
+            { id: 'o7', value: '硅胶', code: 'SI', isActive: true, sort: 7 },
+            { id: 'o8', value: '陶瓷', code: 'CR', isActive: true, sort: 8 },
+        ],
+        createdAt: '2024-01-10', updatedAt: '2024-02-20'
+    },
+    {
+        id: '3', code: 'ORIGIN', name: '产地', shortCode: 'OG', groupId: 'basic', type: 'single_select',
+        required: false, isActive: true, unit: '', refCount: 756, description: '产品生产地',
+        options: [
+            { id: 'o1', value: '中国', code: 'CN', isActive: true, sort: 1 },
+            { id: 'o2', value: '越南', code: 'VN', isActive: true, sort: 2 },
+            { id: 'o3', value: '印度', code: 'IN', isActive: true, sort: 3 },
+            { id: 'o4', value: '泰国', code: 'TH', isActive: true, sort: 4 },
+            { id: 'o5', value: '马来西亚', code: 'MY', isActive: true, sort: 5 },
+        ],
+        createdAt: '2024-01-10', updatedAt: '2024-01-10'
+    },
 
     // 规格属性
-    { id: '7', code: 'LENGTH', name: '长度', shortCode: 'LEN', groupId: 'spec', type: 'number', required: false, isActive: true, options: [], unit: 'cm', refCount: 1024, description: '产品长度', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '8', code: 'WIDTH', name: '宽度', shortCode: 'WID', groupId: 'spec', type: 'number', required: false, isActive: true, options: [], unit: 'cm', refCount: 1024, description: '产品宽度', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '9', code: 'HEIGHT', name: '高度', shortCode: 'HGT', groupId: 'spec', type: 'number', required: false, isActive: true, options: [], unit: 'cm', refCount: 1024, description: '产品高度', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '10', code: 'WEIGHT', name: '重量', shortCode: 'WT', groupId: 'spec', type: 'number', required: true, isActive: true, options: [], unit: 'g', refCount: 1256, description: '产品净重', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '11', code: 'VOLUME', name: '体积', shortCode: 'VOL', groupId: 'spec', type: 'number', required: false, isActive: true, options: [], unit: 'cm³', refCount: 678, description: '产品体积', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-    { id: '12', code: 'POWER', name: '功率', shortCode: 'PWR', groupId: 'spec', type: 'number', required: false, isActive: true, options: [], unit: 'W', refCount: 234, description: '电器功率', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-    { id: '13', code: 'VOLTAGE', name: '电压', shortCode: 'VLT', groupId: 'spec', type: 'single_select', required: false, isActive: true, options: ['110V', '220V', '110V-220V', '12V', '24V'], unit: '', refCount: 234, description: '工作电压', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
+    {
+        id: '4', code: 'WEIGHT', name: '重量', shortCode: 'WT', groupId: 'spec', type: 'number',
+        required: true, isActive: true, unit: 'g', refCount: 1256, description: '产品净重',
+        options: [],
+        createdAt: '2024-01-10', updatedAt: '2024-01-10'
+    },
+    {
+        id: '5', code: 'VOLTAGE', name: '电压', shortCode: 'VLT', groupId: 'spec', type: 'single_select',
+        required: false, isActive: true, unit: '', refCount: 234, description: '工作电压',
+        options: [
+            { id: 'o1', value: '110V', code: '110', isActive: true, sort: 1 },
+            { id: 'o2', value: '220V', code: '220', isActive: true, sort: 2 },
+            { id: 'o3', value: '110V-220V', code: 'UNI', isActive: true, sort: 3 },
+            { id: 'o4', value: '12V', code: '12', isActive: true, sort: 4 },
+            { id: 'o5', value: '24V', code: '24', isActive: true, sort: 5 },
+        ],
+        createdAt: '2024-01-15', updatedAt: '2024-01-15'
+    },
 
     // 销售属性
-    { id: '14', code: 'COLOR', name: '颜色', shortCode: 'CLR', groupId: 'sales', type: 'multi_select', required: true, isActive: true, options: ['黑色', '白色', '红色', '蓝色', '绿色', '黄色', '粉色', '灰色', '棕色', '紫色'], unit: '', refCount: 1256, description: '产品颜色，影响SKU生成', createdAt: '2024-01-10', updatedAt: '2024-03-01' },
-    { id: '15', code: 'SIZE', name: '尺码', shortCode: 'SZ', groupId: 'sales', type: 'multi_select', required: false, isActive: true, options: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'], unit: '', refCount: 456, description: '服装尺码，影响SKU生成', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '16', code: 'STYLE', name: '款式', shortCode: 'STY', groupId: 'sales', type: 'single_select', required: false, isActive: true, options: ['基础款', '升级款', '豪华款', '限定款'], unit: '', refCount: 678, description: '产品款式', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-    { id: '17', code: 'PACKAGE_QTY', name: '包装数量', shortCode: 'PKQ', groupId: 'sales', type: 'single_select', required: false, isActive: true, options: ['单个装', '2个装', '3个装', '5个装', '10个装'], unit: '', refCount: 890, description: '每包装数量', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
+    {
+        id: '6', code: 'COLOR', name: '颜色', shortCode: 'CLR', groupId: 'sales', type: 'multi_select',
+        required: true, isActive: true, unit: '', refCount: 1256, description: '产品颜色，影响SKU生成',
+        options: [
+            { id: 'o1', value: '黑色', code: 'BK', isActive: true, sort: 1 },
+            { id: 'o2', value: '白色', code: 'WT', isActive: true, sort: 2 },
+            { id: 'o3', value: '红色', code: 'RD', isActive: true, sort: 3 },
+            { id: 'o4', value: '蓝色', code: 'BL', isActive: true, sort: 4 },
+            { id: 'o5', value: '绿色', code: 'GN', isActive: true, sort: 5 },
+            { id: 'o6', value: '黄色', code: 'YL', isActive: true, sort: 6 },
+            { id: 'o7', value: '粉色', code: 'PK', isActive: true, sort: 7 },
+            { id: 'o8', value: '灰色', code: 'GY', isActive: true, sort: 8 },
+            { id: 'o9', value: '棕色', code: 'BN', isActive: true, sort: 9 },
+            { id: 'o10', value: '紫色', code: 'PP', isActive: true, sort: 10 },
+            { id: 'o11', value: '橙色', code: 'OG', isActive: true, sort: 11 },
+            { id: 'o12', value: '米色', code: 'BG', isActive: true, sort: 12 },
+            { id: 'o13', value: '藏青色', code: 'NV', isActive: true, sort: 13 },
+            { id: 'o14', value: '卡其色', code: 'KH', isActive: true, sort: 14 },
+            { id: 'o15', value: '透明', code: 'CL', isActive: true, sort: 15 },
+        ],
+        createdAt: '2024-01-10', updatedAt: '2024-03-01'
+    },
+    {
+        id: '7', code: 'SIZE', name: '尺码', shortCode: 'SZ', groupId: 'sales', type: 'multi_select',
+        required: false, isActive: true, unit: '', refCount: 456, description: '服装尺码，影响SKU生成',
+        options: [
+            { id: 'o1', value: 'XS', code: 'XS', isActive: true, sort: 1 },
+            { id: 'o2', value: 'S', code: 'S', isActive: true, sort: 2 },
+            { id: 'o3', value: 'M', code: 'M', isActive: true, sort: 3 },
+            { id: 'o4', value: 'L', code: 'L', isActive: true, sort: 4 },
+            { id: 'o5', value: 'XL', code: 'XL', isActive: true, sort: 5 },
+            { id: 'o6', value: 'XXL', code: '2XL', isActive: true, sort: 6 },
+            { id: 'o7', value: 'XXXL', code: '3XL', isActive: true, sort: 7 },
+        ],
+        createdAt: '2024-01-10', updatedAt: '2024-01-10'
+    },
+    {
+        id: '8', code: 'STYLE', name: '款式', shortCode: 'STY', groupId: 'sales', type: 'single_select',
+        required: false, isActive: true, unit: '', refCount: 678, description: '产品款式',
+        options: [
+            { id: 'o1', value: '基础款', code: 'BS', isActive: true, sort: 1 },
+            { id: 'o2', value: '升级款', code: 'UP', isActive: true, sort: 2 },
+            { id: 'o3', value: '豪华款', code: 'DX', isActive: true, sort: 3 },
+            { id: 'o4', value: '限定款', code: 'LT', isActive: true, sort: 4 },
+        ],
+        createdAt: '2024-01-15', updatedAt: '2024-01-15'
+    },
+    {
+        id: '9', code: 'PACKAGE_QTY', name: '包装数量', shortCode: 'PKQ', groupId: 'sales', type: 'single_select',
+        required: false, isActive: true, unit: '', refCount: 890, description: '每包装数量',
+        options: [
+            { id: 'o1', value: '单个装', code: '1P', isActive: true, sort: 1 },
+            { id: 'o2', value: '2个装', code: '2P', isActive: true, sort: 2 },
+            { id: 'o3', value: '3个装', code: '3P', isActive: true, sort: 3 },
+            { id: 'o4', value: '5个装', code: '5P', isActive: true, sort: 4 },
+            { id: 'o5', value: '10个装', code: '10P', isActive: true, sort: 5 },
+        ],
+        createdAt: '2024-01-15', updatedAt: '2024-01-15'
+    },
 
     // 物流属性
-    { id: '18', code: 'PACK_LENGTH', name: '包装长度', shortCode: 'PKL', groupId: 'logistics', type: 'number', required: true, isActive: true, options: [], unit: 'cm', refCount: 1256, description: '外包装长度', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '19', code: 'PACK_WIDTH', name: '包装宽度', shortCode: 'PKW', groupId: 'logistics', type: 'number', required: true, isActive: true, options: [], unit: 'cm', refCount: 1256, description: '外包装宽度', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '20', code: 'PACK_HEIGHT', name: '包装高度', shortCode: 'PKH', groupId: 'logistics', type: 'number', required: true, isActive: true, options: [], unit: 'cm', refCount: 1256, description: '外包装高度', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '21', code: 'GROSS_WEIGHT', name: '毛重', shortCode: 'GW', groupId: 'logistics', type: 'number', required: true, isActive: true, options: [], unit: 'g', refCount: 1256, description: '含包装重量', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '22', code: 'HS_CODE', name: '海关编码', shortCode: 'HS', groupId: 'logistics', type: 'text', required: false, isActive: true, options: [], unit: '', refCount: 890, description: 'HS海关编码', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-    { id: '23', code: 'BATTERY', name: '含电池', shortCode: 'BAT', groupId: 'logistics', type: 'boolean', required: true, isActive: true, options: [], unit: '', refCount: 1256, description: '是否含电池', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
-    { id: '24', code: 'LIQUID', name: '含液体', shortCode: 'LQD', groupId: 'logistics', type: 'boolean', required: true, isActive: true, options: [], unit: '', refCount: 1256, description: '是否含液体', createdAt: '2024-01-10', updatedAt: '2024-01-10' },
+    {
+        id: '10', code: 'BATTERY', name: '含电池', shortCode: 'BAT', groupId: 'logistics', type: 'boolean',
+        required: true, isActive: true, unit: '', refCount: 1256, description: '是否含电池',
+        options: [],
+        createdAt: '2024-01-10', updatedAt: '2024-01-10'
+    },
+    {
+        id: '11', code: 'BATTERY_TYPE', name: '电池类型', shortCode: 'BTY', groupId: 'logistics', type: 'single_select',
+        required: false, isActive: true, unit: '', refCount: 456, description: '电池类型',
+        options: [
+            { id: 'o1', value: '无电池', code: 'NO', isActive: true, sort: 1 },
+            { id: 'o2', value: '干电池', code: 'DRY', isActive: true, sort: 2 },
+            { id: 'o3', value: '锂电池', code: 'LI', isActive: true, sort: 3 },
+            { id: 'o4', value: '纽扣电池', code: 'BTN', isActive: true, sort: 4 },
+            { id: 'o5', value: '内置锂电池', code: 'BLI', isActive: true, sort: 5 },
+        ],
+        createdAt: '2024-02-01', updatedAt: '2024-02-01'
+    },
 
     // 质量属性
-    { id: '25', code: 'CERT_CE', name: 'CE认证', shortCode: 'CE', groupId: 'quality', type: 'boolean', required: false, isActive: true, options: [], unit: '', refCount: 567, description: '是否有CE认证', createdAt: '2024-01-20', updatedAt: '2024-01-20' },
-    { id: '26', code: 'CERT_FCC', name: 'FCC认证', shortCode: 'FCC', groupId: 'quality', type: 'boolean', required: false, isActive: true, options: [], unit: '', refCount: 456, description: '是否有FCC认证', createdAt: '2024-01-20', updatedAt: '2024-01-20' },
-    { id: '27', code: 'WARRANTY', name: '质保期', shortCode: 'WRY', groupId: 'quality', type: 'single_select', required: false, isActive: true, options: ['无质保', '3个月', '6个月', '1年', '2年', '3年'], unit: '', refCount: 890, description: '产品质保期限', createdAt: '2024-01-20', updatedAt: '2024-01-20' },
-
-    // 自定义属性
-    { id: '28', code: 'CUSTOM_1', name: '自定义属性1', shortCode: 'C1', groupId: 'custom', type: 'text', required: false, isActive: false, options: [], unit: '', refCount: 0, description: '预留自定义属性', createdAt: '2024-02-01', updatedAt: '2024-02-01' },
+    {
+        id: '12', code: 'WARRANTY', name: '质保期', shortCode: 'WRY', groupId: 'quality', type: 'single_select',
+        required: false, isActive: true, unit: '', refCount: 890, description: '产品质保期限',
+        options: [
+            { id: 'o1', value: '无质保', code: 'NO', isActive: true, sort: 1 },
+            { id: 'o2', value: '3个月', code: '3M', isActive: true, sort: 2 },
+            { id: 'o3', value: '6个月', code: '6M', isActive: true, sort: 3 },
+            { id: 'o4', value: '1年', code: '1Y', isActive: true, sort: 4 },
+            { id: 'o5', value: '2年', code: '2Y', isActive: true, sort: 5 },
+            { id: 'o6', value: '3年', code: '3Y', isActive: true, sort: 6 },
+        ],
+        createdAt: '2024-01-20', updatedAt: '2024-01-20'
+    },
 ];
 
 // --------------- 轻量级 UI 组件 ---------------
@@ -169,7 +283,6 @@ const Badge = ({ children, variant = 'default', className }) => {
         danger: 'bg-red-100 text-red-700',
         info: 'bg-blue-100 text-blue-700',
         purple: 'bg-purple-100 text-purple-700',
-        orange: 'bg-orange-100 text-orange-700',
     };
     return (
         <span className={cn(
@@ -219,6 +332,148 @@ const TypeBadge = ({ type }) => {
     );
 };
 
+// --------------- 选项值编辑组件 ---------------
+const OptionEditor = ({ options, onChange }) => {
+    const [editingId, setEditingId] = useState(null);
+
+    const handleAddOption = () => {
+        const newOption = {
+            id: `opt_${Date.now()}`,
+            value: '',
+            code: '',
+            isActive: true,
+            sort: options.length + 1,
+        };
+        onChange([...options, newOption]);
+        setEditingId(newOption.id);
+    };
+
+    const handleUpdateOption = (optionId, field, value) => {
+        onChange(options.map(opt =>
+            opt.id === optionId ? { ...opt, [field]: value } : opt
+        ));
+    };
+
+    const handleDeleteOption = (optionId) => {
+        onChange(options.filter(opt => opt.id !== optionId));
+    };
+
+    const handleMoveOption = (index, direction) => {
+        const newOptions = [...options];
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= options.length) return;
+        [newOptions[index], newOptions[newIndex]] = [newOptions[newIndex], newOptions[index]];
+        newOptions.forEach((opt, idx) => opt.sort = idx + 1);
+        onChange(newOptions);
+    };
+
+    return (
+        <div className="space-y-2">
+            <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-medium text-gray-700">属性值配置</label>
+                <SecondaryButton icon={Plus} size="sm" onClick={handleAddOption}>添加选项</SecondaryButton>
+            </div>
+
+            {options.length > 0 ? (
+                <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full text-sm">
+                        <thead>
+                            <tr className="bg-gray-50 border-b">
+                                <th className="px-3 py-2 text-left font-medium text-gray-600 w-8"></th>
+                                <th className="px-3 py-2 text-left font-medium text-gray-600">显示名称</th>
+                                <th className="px-3 py-2 text-left font-medium text-gray-600 w-28">简写编码</th>
+                                <th className="px-3 py-2 text-left font-medium text-gray-600 w-16">启用</th>
+                                <th className="px-3 py-2 text-left font-medium text-gray-600 w-20">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                            {options.sort((a, b) => a.sort - b.sort).map((option, index) => (
+                                <tr key={option.id} className="hover:bg-gray-50">
+                                    <td className="px-3 py-2">
+                                        <div className="flex flex-col gap-0.5">
+                                            <button
+                                                onClick={() => handleMoveOption(index, -1)}
+                                                disabled={index === 0}
+                                                className={cn(
+                                                    'w-4 h-3 flex items-center justify-center rounded text-xs',
+                                                    index === 0 ? 'text-gray-200' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                                                )}
+                                            >
+                                                ▲
+                                            </button>
+                                            <button
+                                                onClick={() => handleMoveOption(index, 1)}
+                                                disabled={index === options.length - 1}
+                                                className={cn(
+                                                    'w-4 h-3 flex items-center justify-center rounded text-xs',
+                                                    index === options.length - 1 ? 'text-gray-200' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                                                )}
+                                            >
+                                                ▼
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td className="px-3 py-2">
+                                        <input
+                                            type="text"
+                                            value={option.value}
+                                            onChange={(e) => handleUpdateOption(option.id, 'value', e.target.value)}
+                                            placeholder="选项名称"
+                                            className="w-full border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </td>
+                                    <td className="px-3 py-2">
+                                        <input
+                                            type="text"
+                                            value={option.code}
+                                            onChange={(e) => handleUpdateOption(option.id, 'code', e.target.value.toUpperCase())}
+                                            placeholder="编码"
+                                            className="w-full border border-gray-200 rounded px-2 py-1 text-sm font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </td>
+                                    <td className="px-3 py-2">
+                                        <Toggle
+                                            checked={option.isActive}
+                                            onChange={(v) => handleUpdateOption(option.id, 'isActive', v)}
+                                        />
+                                    </td>
+                                    <td className="px-3 py-2">
+                                        <IconButton
+                                            icon={Trash2}
+                                            onClick={() => handleDeleteOption(option.id)}
+                                            title="删除"
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <div className="text-center py-6 text-gray-400 border-2 border-dashed rounded-lg">
+                    <p className="text-sm">暂无选项，点击"添加选项"创建</p>
+                </div>
+            )}
+
+            {/* 预览 */}
+            {options.length > 0 && (
+                <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                    <p className="text-xs text-blue-600 mb-2">编码预览（显示名称 → 简写编码）：</p>
+                    <div className="flex flex-wrap gap-2">
+                        {options.filter(o => o.isActive && o.value && o.code).map(opt => (
+                            <span key={opt.id} className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded border text-xs">
+                                <span>{opt.value}</span>
+                                <span className="text-gray-400">→</span>
+                                <code className="font-mono text-blue-600 font-bold">{opt.code}</code>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
 // --------------- 属性编辑抽屉 ---------------
 const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
     const [formData, setFormData] = useState({
@@ -233,7 +488,6 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
         description: '',
         options: [],
     });
-    const [newOption, setNewOption] = useState('');
 
     React.useEffect(() => {
         if (attribute) {
@@ -247,7 +501,7 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
                 isActive: attribute.isActive,
                 unit: attribute.unit || '',
                 description: attribute.description || '',
-                options: [...(attribute.options || [])],
+                options: attribute.options ? attribute.options.map(o => ({ ...o })) : [],
             });
         } else {
             setFormData({
@@ -265,23 +519,6 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
         }
     }, [attribute]);
 
-    const handleAddOption = () => {
-        if (newOption && !formData.options.includes(newOption)) {
-            setFormData(prev => ({
-                ...prev,
-                options: [...prev.options, newOption]
-            }));
-            setNewOption('');
-        }
-    };
-
-    const handleRemoveOption = (opt) => {
-        setFormData(prev => ({
-            ...prev,
-            options: prev.options.filter(o => o !== opt)
-        }));
-    };
-
     const handleSave = () => {
         const savedAttr = {
             ...attribute,
@@ -295,7 +532,8 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
         onClose();
     };
 
-    const needsOptions = ['single_select', 'multi_select'].includes(formData.type);
+    const typeConfig = ATTRIBUTE_TYPES.find(t => t.id === formData.type);
+    const needsOptions = typeConfig?.hasOptions;
     const needsUnit = formData.type === 'number';
 
     if (!isOpen) return null;
@@ -303,7 +541,7 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
     return (
         <div className="fixed inset-0 z-50 flex justify-end">
             <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-            <div className="relative w-[560px] bg-white h-full shadow-xl flex flex-col">
+            <div className="relative w-[640px] bg-white h-full shadow-xl flex flex-col">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b">
                     <h2 className="text-lg font-semibold">{attribute ? '编辑属性' : '新建属性'}</h2>
@@ -321,6 +559,7 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
                                 onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
                                 placeholder="如 COLOR"
                             />
+                            <p className="text-xs text-gray-400 mt-1">系统内部使用的唯一标识</p>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">简写编码 *</label>
@@ -329,7 +568,7 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
                                 onChange={(e) => setFormData({ ...formData, shortCode: e.target.value.toUpperCase() })}
                                 placeholder="如 CLR"
                             />
-                            <p className="text-xs text-gray-400 mt-1">用于生成产品编码</p>
+                            <p className="text-xs text-gray-400 mt-1">用于生成产品SKU编码</p>
                         </div>
                     </div>
 
@@ -356,7 +595,7 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
                             <label className="block text-sm font-medium text-gray-700 mb-1">属性类型 *</label>
                             <Select
                                 value={formData.type}
-                                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                                onChange={(e) => setFormData({ ...formData, type: e.target.value, options: [] })}
                                 options={ATTRIBUTE_TYPES.map(t => ({ value: t.id, label: t.name }))}
                                 className="w-full"
                             />
@@ -375,28 +614,12 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
                         </div>
                     )}
 
-                    {/* 选择类型的选项 */}
+                    {/* 选择类型的选项配置 */}
                     {needsOptions && (
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">可选值</label>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                                {formData.options.map((opt, idx) => (
-                                    <span key={idx} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded text-sm">
-                                        {opt}
-                                        <X className="w-3 h-3 cursor-pointer hover:text-red-500" onClick={() => handleRemoveOption(opt)} />
-                                    </span>
-                                ))}
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Input
-                                    value={newOption}
-                                    onChange={(e) => setNewOption(e.target.value)}
-                                    placeholder="输入选项值"
-                                    className="flex-1"
-                                />
-                                <SecondaryButton icon={Plus} size="sm" onClick={handleAddOption}>添加</SecondaryButton>
-                            </div>
-                        </div>
+                        <OptionEditor
+                            options={formData.options}
+                            onChange={(newOptions) => setFormData({ ...formData, options: newOptions })}
+                        />
                     )}
 
                     {/* 描述 */}
@@ -430,21 +653,6 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
                             <span className="text-sm text-gray-700">启用</span>
                         </label>
                     </div>
-
-                    {/* 预览 */}
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 mb-2">预览</p>
-                        <div className="flex items-center gap-3">
-                            <Badge variant={formData.isActive ? 'success' : 'default'}>
-                                {formData.isActive ? '启用' : '停用'}
-                            </Badge>
-                            <span className="font-medium">{formData.name || '属性名称'}</span>
-                            <code className="text-xs text-gray-500 bg-white px-2 py-0.5 rounded">{formData.shortCode || 'CODE'}</code>
-                            <TypeBadge type={formData.type} />
-                            {formData.required && <Badge variant="danger">必填</Badge>}
-                            {formData.unit && <span className="text-xs text-gray-500">单位: {formData.unit}</span>}
-                        </div>
-                    </div>
                 </div>
 
                 {/* Footer */}
@@ -463,6 +671,123 @@ const AttributeEditDrawer = ({ isOpen, onClose, attribute, onSave }) => {
     );
 };
 
+// --------------- 属性详情展示 ---------------
+const AttributeDetail = ({ attribute, onEdit, onClose }) => {
+    if (!attribute) return null;
+
+    const typeConfig = ATTRIBUTE_TYPES.find(t => t.id === attribute.type);
+    const groupConfig = ATTRIBUTE_GROUPS.find(g => g.id === attribute.groupId);
+
+    return (
+        <div className="fixed inset-0 z-50 flex justify-end">
+            <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+            <div className="relative w-[560px] bg-white h-full shadow-xl flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                    <div className="flex items-center gap-3">
+                        <h2 className="text-lg font-semibold">{attribute.name}</h2>
+                        <Badge variant={attribute.isActive ? 'success' : 'default'}>
+                            {attribute.isActive ? '启用' : '停用'}
+                        </Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <SecondaryButton icon={Edit2} size="sm" onClick={() => onEdit(attribute)}>编辑</SecondaryButton>
+                        <IconButton icon={X} onClick={onClose} />
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                    {/* 基本信息 */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">属性编码</p>
+                            <code className="text-sm bg-gray-100 px-2 py-1 rounded">{attribute.code}</code>
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">简写编码</p>
+                            <code className="text-sm bg-blue-50 text-blue-600 px-2 py-1 rounded font-bold">{attribute.shortCode}</code>
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">所属分组</p>
+                            <span className="text-sm">{groupConfig?.name}</span>
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">属性类型</p>
+                            <TypeBadge type={attribute.type} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">是否必填</p>
+                            <span className="text-sm">{attribute.required ? '是' : '否'}</span>
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">引用次数</p>
+                            <span className="text-sm">{attribute.refCount.toLocaleString()}</span>
+                        </div>
+                    </div>
+
+                    {attribute.unit && (
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">单位</p>
+                            <span className="text-sm">{attribute.unit}</span>
+                        </div>
+                    )}
+
+                    {attribute.description && (
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">描述</p>
+                            <p className="text-sm text-gray-700">{attribute.description}</p>
+                        </div>
+                    )}
+
+                    {/* 选项列表 */}
+                    {attribute.options && attribute.options.length > 0 && (
+                        <div>
+                            <p className="text-xs text-gray-500 mb-2">属性值列表（{attribute.options.length} 个选项）</p>
+                            <div className="border rounded-lg overflow-hidden">
+                                <table className="w-full text-sm">
+                                    <thead>
+                                        <tr className="bg-gray-50">
+                                            <th className="px-3 py-2 text-left font-medium text-gray-600">序号</th>
+                                            <th className="px-3 py-2 text-left font-medium text-gray-600">显示名称</th>
+                                            <th className="px-3 py-2 text-left font-medium text-gray-600">简写编码</th>
+                                            <th className="px-3 py-2 text-left font-medium text-gray-600">状态</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {attribute.options.sort((a, b) => a.sort - b.sort).map((opt, idx) => (
+                                            <tr key={opt.id} className={!opt.isActive ? 'bg-gray-50 text-gray-400' : ''}>
+                                                <td className="px-3 py-2 text-gray-400">{idx + 1}</td>
+                                                <td className="px-3 py-2 font-medium">{opt.value}</td>
+                                                <td className="px-3 py-2">
+                                                    <code className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded font-mono font-bold">{opt.code}</code>
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    {opt.isActive ? (
+                                                        <Badge variant="success">启用</Badge>
+                                                    ) : (
+                                                        <Badge variant="default">停用</Badge>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 更新信息 */}
+                    <div className="text-xs text-gray-400 pt-4 border-t">
+                        <p>创建时间：{attribute.createdAt}</p>
+                        <p>更新时间：{attribute.updatedAt}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --------------- 主组件 ---------------
 export default function ProductAttributePage() {
     const [attributes, setAttributes] = useState(initialAttributes);
@@ -471,6 +796,7 @@ export default function ProductAttributePage() {
     const [filterType, setFilterType] = useState('');
     const [filterStatus, setFilterStatus] = useState('');
     const [editingAttr, setEditingAttr] = useState(null);
+    const [viewingAttr, setViewingAttr] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [expandedGroups, setExpandedGroups] = useState(ATTRIBUTE_GROUPS.map(g => g.id));
 
@@ -499,6 +825,7 @@ export default function ProductAttributePage() {
         total: attributes.length,
         active: attributes.filter(a => a.isActive).length,
         required: attributes.filter(a => a.required).length,
+        optionsCount: attributes.reduce((sum, a) => sum + (a.options?.length || 0), 0),
     };
 
     const handleAddAttr = () => {
@@ -508,19 +835,18 @@ export default function ProductAttributePage() {
 
     const handleEditAttr = (attr) => {
         setEditingAttr(attr);
+        setViewingAttr(null);
         setIsDrawerOpen(true);
+    };
+
+    const handleViewAttr = (attr) => {
+        setViewingAttr(attr);
     };
 
     const handleToggleAttr = (attrId) => {
         setAttributes(prev => prev.map(a =>
             a.id === attrId ? { ...a, isActive: !a.isActive, updatedAt: new Date().toISOString().split('T')[0] } : a
         ));
-    };
-
-    const handleDeleteAttr = (attrId) => {
-        if (window.confirm('确定要删除该属性吗？')) {
-            setAttributes(prev => prev.filter(a => a.id !== attrId));
-        }
     };
 
     const handleSaveAttr = (savedAttr) => {
@@ -546,7 +872,6 @@ export default function ProductAttributePage() {
             purple: 'bg-purple-500',
             orange: 'bg-orange-500',
             red: 'bg-red-500',
-            gray: 'bg-gray-500',
         };
         return colors[colorName] || 'bg-gray-500';
     };
@@ -557,7 +882,7 @@ export default function ProductAttributePage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">属性管理</h1>
-                    <p className="text-sm text-gray-500 mt-1">管理产品属性定义，包括属性编码、类型、可选值等配置</p>
+                    <p className="text-sm text-gray-500 mt-1">管理产品属性及其选项值的编码配置</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <SecondaryButton icon={Upload}>导入</SecondaryButton>
@@ -604,11 +929,11 @@ export default function ProductAttributePage() {
                 <Card className="p-4">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                            <Layers className="w-5 h-5 text-purple-600" />
+                            <Tag className="w-5 h-5 text-purple-600" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500">属性分组</p>
-                            <p className="text-2xl font-bold text-gray-900">{ATTRIBUTE_GROUPS.length}</p>
+                            <p className="text-sm text-gray-500">选项值总数</p>
+                            <p className="text-2xl font-bold text-gray-900">{stats.optionsCount}</p>
                         </div>
                     </div>
                 </Card>
@@ -672,7 +997,7 @@ export default function ProductAttributePage() {
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                     <h3 className="font-semibold text-gray-800">{group.name}</h3>
-                                    <span className="text-xs text-gray-400">({group.attributes.length})</span>
+                                    <span className="text-xs text-gray-400">({group.attributes.length} 个属性)</span>
                                 </div>
                                 <p className="text-xs text-gray-500">{group.description}</p>
                             </div>
@@ -691,12 +1016,11 @@ export default function ProductAttributePage() {
                                         <tr className="border-b border-gray-100">
                                             <th className="px-4 py-3 text-left font-medium text-gray-600">状态</th>
                                             <th className="px-4 py-3 text-left font-medium text-gray-600">属性名称</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">编码</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">简写</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600">编码 / 简写</th>
                                             <th className="px-4 py-3 text-left font-medium text-gray-600">类型</th>
                                             <th className="px-4 py-3 text-left font-medium text-gray-600">必填</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">单位/选项</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">引用数</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600">选项数 / 单位</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600">选项值示例</th>
                                             <th className="px-4 py-3 text-left font-medium text-gray-600">操作</th>
                                         </tr>
                                     </thead>
@@ -710,18 +1034,22 @@ export default function ProductAttributePage() {
                                                     />
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    <div>
+                                                    <button
+                                                        onClick={() => handleViewAttr(attr)}
+                                                        className="text-left hover:text-blue-600"
+                                                    >
                                                         <p className="font-medium text-gray-900">{attr.name}</p>
                                                         {attr.description && (
                                                             <p className="text-xs text-gray-400 truncate max-w-xs">{attr.description}</p>
                                                         )}
+                                                    </button>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded">{attr.code}</code>
+                                                        <span className="text-gray-300">/</span>
+                                                        <code className="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-bold">{attr.shortCode}</code>
                                                     </div>
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <code className="text-xs bg-gray-100 px-2 py-0.5 rounded">{attr.code}</code>
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <code className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold">{attr.shortCode}</code>
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <TypeBadge type={attr.type} />
@@ -737,12 +1065,29 @@ export default function ProductAttributePage() {
                                                     {attr.unit ? (
                                                         <span className="text-gray-600">{attr.unit}</span>
                                                     ) : attr.options?.length > 0 ? (
-                                                        <span className="text-xs text-gray-500">{attr.options.length} 个选项</span>
+                                                        <span className="text-xs text-purple-600 font-medium">{attr.options.length} 个选项</span>
                                                     ) : (
                                                         <span className="text-gray-400">-</span>
                                                     )}
                                                 </td>
-                                                <td className="px-4 py-3 text-gray-500">{attr.refCount.toLocaleString()}</td>
+                                                <td className="px-4 py-3">
+                                                    {attr.options?.length > 0 ? (
+                                                        <div className="flex flex-wrap gap-1 max-w-xs">
+                                                            {attr.options.slice(0, 3).map(opt => (
+                                                                <span key={opt.id} className="inline-flex items-center gap-0.5 text-xs">
+                                                                    <span className="text-gray-600">{opt.value}</span>
+                                                                    <span className="text-gray-300">=</span>
+                                                                    <code className="text-blue-600 font-mono">{opt.code}</code>
+                                                                </span>
+                                                            ))}
+                                                            {attr.options.length > 3 && (
+                                                                <span className="text-xs text-gray-400">+{attr.options.length - 3}...</span>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-gray-400">-</span>
+                                                    )}
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center gap-1">
                                                         <IconButton icon={Edit2} onClick={() => handleEditAttr(attr)} title="编辑" />
@@ -754,15 +1099,10 @@ export default function ProductAttributePage() {
                                                                 shortCode: `${attr.shortCode}2`,
                                                                 name: `${attr.name} (副本)`,
                                                                 refCount: 0,
+                                                                options: attr.options?.map(o => ({ ...o, id: `${o.id}_copy` })) || [],
                                                             };
                                                             setAttributes(prev => [...prev, newAttr]);
                                                         }} title="复制" />
-                                                        <IconButton
-                                                            icon={Trash2}
-                                                            onClick={() => handleDeleteAttr(attr.id)}
-                                                            title="删除"
-                                                            disabled={attr.refCount > 0}
-                                                        />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -789,6 +1129,15 @@ export default function ProductAttributePage() {
                 attribute={editingAttr}
                 onSave={handleSaveAttr}
             />
+
+            {/* 详情抽屉 */}
+            {viewingAttr && (
+                <AttributeDetail
+                    attribute={viewingAttr}
+                    onEdit={handleEditAttr}
+                    onClose={() => setViewingAttr(null)}
+                />
+            )}
         </div>
     );
 }
