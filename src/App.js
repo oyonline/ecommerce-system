@@ -41,6 +41,7 @@ import CodingRulePage from './pages/CodingRulePage';
 import ProductAttributePage from './pages/ProductAttributePage';
 import BudgetVersionPage from './pages/BudgetVersionPage';
 import BudgetVersionDetailPage from './pages/BudgetVersionDetailPage';
+import SupplierListPage from './pages/SupplierListPage';
 
 // 导航配置
 const navigationConfig = [
@@ -399,6 +400,8 @@ function App() {
                 return <OrganizationManagementPage />;
             case '/sales/target':
                 return <SalesTargetPage />;
+            case '/procurement/supplier':
+                return <SupplierListPage onOpenDetail={openTab} />;
             default:
                 return <PlaceholderPage pageName={tab.name} path={tab.path} />;
         }
