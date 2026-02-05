@@ -215,24 +215,32 @@ const NavItem = ({item, level = 0, isActive, onNavigate, expandedItems, toggleEx
     );
 };
 
+// 标签栏最多直接展示的个数，超出部分放入「更多」下拉
+const MAX_VISIBLE_TABS = 8;
+
 // --------------- 标签页组件 ---------------
 const TabBar = ({ tabs, activeTabId, onTabClick, onTabClose }) => {
+    const [moreOpen, setMoreOpen] = useState(false);
     if (tabs.length === 0) return null;
+
+    const showOverflow = tabs.length > MAX_VISIBLE_TABS;
+    const visibleTabs = showOverflow ? tabs.slice(0, MAX_VISIBLE_TABS - 1) : tabs;
+    const overflowTabs = showOverflow ? tabs.slice(MAX_VISIBLE_TABS - 1) : [];
 
     return (
         <div className="bg-white border-b border-gray-200 flex items-center overflow-x-auto">
-            <div className="flex items-center px-2 py-1 gap-1 min-w-0">
-                {tabs.map(tab => (
+            <div className="flex items-center px-2 py-1 gap-1 min-w-0 flex-1">
+                {visibleTabs.map(tab => (
                     <div
                         key={tab.id}
-                        className={`group flex items-center gap-2 px-3 py-1.5 rounded-t-lg cursor-pointer transition-colors min-w-0 max-w-[200px] ${
+                        className={`group flex items-center gap-2 px-3 py-1.5 rounded-t-lg cursor-pointer transition-colors min-w-0 max-w-[200px] flex-shrink-0 ${
                             activeTabId === tab.id
                                 ? 'bg-blue-50 text-blue-600 border border-b-0 border-gray-200'
                                 : 'text-gray-600 hover:bg-gray-100'
                         }`}
                         onClick={() => onTabClick(tab.id)}
                     >
-                        <span className="text-sm truncate flex-1">{tab.name}</span>
+                        <span className="text-sm truncate flex-1 min-w-0">{tab.name}</span>
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -244,6 +252,58 @@ const TabBar = ({ tabs, activeTabId, onTabClick, onTabClose }) => {
                         </button>
                     </div>
                 ))}
+                {showOverflow && (
+                    <div className="relative flex-shrink-0">
+                        <button
+                            type="button"
+                            onClick={() => setMoreOpen(prev => !prev)}
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded-t-lg text-sm transition-colors ${
+                                overflowTabs.some(t => t.id === activeTabId)
+                                    ? 'bg-blue-50 text-blue-600 border border-b-0 border-gray-200'
+                                    : 'text-gray-600 hover:bg-gray-100'
+                            }`}
+                        >
+                            <span>更多</span>
+                            <ChevronDown className={`w-4 h-4 transition-transform ${moreOpen ? 'rotate-180' : ''}`} />
+                            <span className="text-xs text-gray-400">({overflowTabs.length})</span>
+                        </button>
+                        {moreOpen && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-10"
+                                    onClick={() => setMoreOpen(false)}
+                                    aria-hidden="true"
+                                />
+                                <div className="absolute left-0 top-full mt-0.5 py-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[200px] max-h-72 overflow-y-auto">
+                                    {overflowTabs.map(tab => (
+                                        <div
+                                            key={tab.id}
+                                            className={`flex items-center justify-between gap-2 px-3 py-2 cursor-pointer text-sm hover:bg-gray-50 ${
+                                                activeTabId === tab.id ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                                            }`}
+                                            onClick={() => {
+                                                onTabClick(tab.id);
+                                                setMoreOpen(false);
+                                            }}
+                                        >
+                                            <span className="truncate flex-1 min-w-0">{tab.name}</span>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onTabClose(tab.id);
+                                                    setMoreOpen(false);
+                                                }}
+                                                className="p-1 rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );
