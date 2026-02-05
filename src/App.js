@@ -248,64 +248,59 @@ const TabBar = ({ tabs, activeTabId, onTabClick, onTabClose }) => {
 };
 
 function App() {
-    const [currentPath, setCurrentPath] = useState('/home');
-    const [currentPageName, setCurrentPageName] = useState('首页');
     const [expandedItems, setExpandedItems] = useState(['product']);
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [currentRecord, setCurrentRecord] = useState(null);
 
-    // 标签页状态
-    const [tabs, setTabs] = useState([]);
-    const [activeTabId, setActiveTabId] = useState(null);
+    // 标签页状态：开一个就新增一个标签，始终至少保留一个（首页）
+    const [tabs, setTabs] = useState([{ id: '/home', name: '首页', path: '/home' }]);
+    const [activeTabId, setActiveTabId] = useState('/home');
 
-    const openSkuDetail = (row) => {
-        setCurrentRecord(row || null);
-        handleNavigate('/product/sku-detail', 'SKU 详情');
-    };
-
-    // 打开新标签页
+    // 打开新标签页（内部打开详情等用）
     const openTab = useCallback((tabInfo) => {
         const { id, name, path, data } = tabInfo;
-
-        // 检查是否已存在相同ID的标签
         const existingTab = tabs.find(t => t.id === id);
         if (existingTab) {
             setActiveTabId(id);
             return;
         }
-
-        // 添加新标签
         setTabs(prev => [...prev, { id, name, path, data }]);
         setActiveTabId(id);
     }, [tabs]);
 
-    // 关闭标签页
+    // 从侧栏导航：有同 path 的标签则激活，否则新增一个标签
+    const handleNavigate = (path, name) => {
+        const existing = tabs.find(t => t.path === path);
+        if (existing) {
+            setActiveTabId(existing.id);
+            return;
+        }
+        setTabs(prev => [...prev, { id: path, name, path }]);
+        setActiveTabId(path);
+    };
+
+    const openSkuDetail = (row) => {
+        const id = `product/sku-detail-${row?.id ?? Date.now()}`;
+        openTab({ id, name: 'SKU 详情', path: '/product/sku-detail', data: row });
+    };
+
+    // 关闭标签页；关到没有则保留首页；激活态由 useEffect 同步
     const closeTab = useCallback((tabId) => {
         setTabs(prev => {
             const newTabs = prev.filter(t => t.id !== tabId);
-            // 如果关闭的是当前激活的标签，切换到最后一个标签或清空
-            if (activeTabId === tabId) {
-                if (newTabs.length > 0) {
-                    setActiveTabId(newTabs[newTabs.length - 1].id);
-                } else {
-                    setActiveTabId(null);
-                }
-            }
-            return newTabs;
+            return newTabs.length > 0 ? newTabs : [{ id: '/home', name: '首页', path: '/home' }];
         });
-    }, [activeTabId]);
+    }, []);
 
-    // 切换标签页
+    // 关闭标签后若当前激活的 tab 已被移除，则激活最后一个
+    React.useEffect(() => {
+        if (tabs.length > 0 && !tabs.some(t => t.id === activeTabId)) {
+            setActiveTabId(tabs[tabs.length - 1].id);
+        }
+    }, [tabs]);
+
     const switchTab = useCallback((tabId) => {
         setActiveTabId(tabId);
     }, []);
-
-    const handleNavigate = (path, name) => {
-        setCurrentPath(path);
-        setCurrentPageName(name);
-        // 导航时取消激活的标签页，显示主内容
-        setActiveTabId(null);
-    };
 
     const toggleExpand = (itemId) => {
         setExpandedItems(prev =>
@@ -313,24 +308,10 @@ function App() {
         );
     };
 
-    // 渲染标签页内容
+    // 根据当前激活的标签渲染内容（所有页面统一走标签）
     const renderTabContent = (tab) => {
+        if (!tab) return <HomePage />;
         switch (tab.path) {
-            case '/finance-gov/budget-version/detail':
-                return (
-                    <BudgetVersionDetailPage
-                        versionId={tab.data?.id}
-                        versionData={tab.data}
-                        onClose={() => closeTab(tab.id)}
-                    />
-                );
-            default:
-                return <PlaceholderPage pageName={tab.name} path={tab.path} />;
-        }
-    };
-
-    const renderPage = () => {
-        switch (currentPath) {
             case '/home':
                 return <HomePage />;
             case '/product/master':
@@ -338,7 +319,7 @@ function App() {
             case '/product/sku-detail':
                 return (
                     <div className="flex-1 min-h-0 overflow-auto">
-                        <SkuDetailPage record={currentRecord} />
+                        <SkuDetailPage record={tab.data} />
                     </div>
                 );
             case '/product/bom':
@@ -367,32 +348,43 @@ function App() {
                 return (
                     <ExpenseApprovalListPageSimple
                         onOpenDetail={(rec) => {
-                            setCurrentRecord(rec);
-                            handleNavigate('/finance/approval/detail', '审批单详情');
+                            openTab({
+                                id: `finance/approval/detail-${rec?.id ?? Date.now()}`,
+                                name: '审批单详情',
+                                path: '/finance/approval/detail',
+                                data: rec
+                            });
                         }}
                     />
                 );
             case '/finance/approval/detail':
                 return (
                     <ExpenseApprovalDetailPageSimple
-                        record={currentRecord}
-                        onBack={() => handleNavigate('/finance/approval/list', '费用审批列表')}
+                        record={tab.data}
+                        onBack={() => closeTab(tab.id)}
                     />
                 );
             case '/finance-gov/expense-category':
                 return <ExpenseCategoryPage />;
             case '/finance-gov/budget-version':
                 return <BudgetVersionPage onOpenDetail={openTab} />;
+            case '/finance-gov/budget-version/detail':
+                return (
+                    <BudgetVersionDetailPage
+                        versionId={tab.data?.id}
+                        versionData={tab.data}
+                        onClose={() => closeTab(tab.id)}
+                    />
+                );
             case '/organization/structure':
                 return <OrganizationManagementPage />;
             case '/sales/target':
                 return <SalesTargetPage />;
             default:
-                return <PlaceholderPage pageName={currentPageName} path={currentPath} />;
+                return <PlaceholderPage pageName={tab.name} path={tab.path} />;
         }
     };
 
-    // 获取当前显示的标签页
     const activeTab = tabs.find(t => t.id === activeTabId);
 
     return (
@@ -416,7 +408,7 @@ function App() {
                         <NavItem
                             key={item.id}
                             item={item}
-                            isActive={currentPath}
+                            isActive={activeTab?.path ?? '/home'}
                             onNavigate={handleNavigate}
                             expandedItems={expandedItems}
                             toggleExpand={toggleExpand}
@@ -441,12 +433,8 @@ function App() {
                             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                         </button>
                         <div>
-                            <h2 className="text-lg font-semibold text-gray-800">
-                                {activeTabId && activeTab ? activeTab.name : currentPageName}
-                            </h2>
-                            <p className="text-xs text-gray-500">
-                                {activeTabId && activeTab ? activeTab.path : currentPath}
-                            </p>
+                            <h2 className="text-lg font-semibold text-gray-800">{activeTab?.name ?? '首页'}</h2>
+                            <p className="text-xs text-gray-500">{activeTab?.path ?? '/home'}</p>
                         </div>
                     </div>
                     <div className="text-sm text-gray-600">
@@ -462,13 +450,9 @@ function App() {
                     onTabClose={closeTab}
                 />
 
-                {/* 主内容 */}
+                {/* 主内容：始终按当前激活的标签渲染 */}
                 <main className="flex-1 min-h-0 overflow-auto p-6">
-                    {activeTabId && activeTab ? (
-                        renderTabContent(activeTab)
-                    ) : (
-                        renderPage()
-                    )}
+                    {renderTabContent(activeTab)}
                 </main>
             </div>
         </div>
