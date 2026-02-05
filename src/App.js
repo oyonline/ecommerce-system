@@ -42,6 +42,7 @@ import ProductAttributePage from './pages/ProductAttributePage';
 import BudgetVersionPage from './pages/BudgetVersionPage';
 import BudgetVersionDetailPage from './pages/BudgetVersionDetailPage';
 import SupplierListPage from './pages/SupplierListPage';
+import SkuIterationPage from './pages/SkuIterationPage';
 
 // 导航配置
 const navigationConfig = [
@@ -402,6 +403,8 @@ function App() {
                 return <SalesTargetPage />;
             case '/procurement/supplier':
                 return <SupplierListPage onOpenDetail={openTab} />;
+            case '/procurement/sku-iteration':
+                return <SkuIterationPage />;
             default:
                 return <PlaceholderPage pageName={tab.name} path={tab.path} />;
         }
