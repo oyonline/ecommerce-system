@@ -30,6 +30,7 @@ import AllocationRulePage from './pages/AllocationRulePage';
 import ExpenseApprovalListPageSimple from './pages/ExpenseApprovalListPage.simple';
 import ExpenseApprovalDetailPageSimple from './pages/ExpenseApprovalDetailPage.simple';
 import ExpenseFactPage from './pages/ExpenseFactPage';
+import ExpenseFactDetailPage from './pages/ExpenseFactDetailPage';
 import ExpenseCategoryPage from './pages/ExpenseCategoryPage';
 import OrganizationManagementPage from './pages/OrganizationManagementPage';
 import PlaceholderPage from './pages/PlaceholderPage';
@@ -248,7 +249,7 @@ const TabBar = ({ tabs, activeTabId, onTabClick, onTabClose }) => {
 };
 
 function App() {
-    const [expandedItems, setExpandedItems] = useState(['product']);
+    const [expandedItems, setExpandedItems] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     // 标签页状态：开一个就新增一个标签，始终至少保留一个（首页）
@@ -343,7 +344,18 @@ function App() {
             case '/finance-gov/allocation-rule':
                 return <AllocationRulePage />;
             case '/finance-gov/expense-fact':
-                return <ExpenseFactPage />;
+                return (
+                    <ExpenseFactPage
+                        onOpenDetail={(rec) =>
+                            openTab({
+                                id: `expense-fact-detail-${rec?.id ?? Date.now()}`,
+                                name: `费用事实详情: ${rec?.approvalNo ?? '详情'}`,
+                                path: '/finance-gov/expense-fact/detail',
+                                data: rec,
+                            })
+                        }
+                    />
+                );
             case '/finance/approval/list':
                 return (
                     <ExpenseApprovalListPageSimple
@@ -368,6 +380,13 @@ function App() {
                 return <ExpenseCategoryPage />;
             case '/finance-gov/budget-version':
                 return <BudgetVersionPage onOpenDetail={openTab} />;
+            case '/finance-gov/expense-fact/detail':
+                return (
+                    <ExpenseFactDetailPage
+                        record={tab.data}
+                        onClose={() => closeTab(tab.id)}
+                    />
+                );
             case '/finance-gov/budget-version/detail':
                 return (
                     <BudgetVersionDetailPage

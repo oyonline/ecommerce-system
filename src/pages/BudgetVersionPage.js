@@ -10,125 +10,46 @@ import {
 // 轻量工具：className 拼接
 const cn = (...args) => args.filter(Boolean).join(' ');
 
-// --------------- 成本中心数据（用于关联） ---------------
+// --------------- 成本中心数据（每个预算版本只关联一个成本中心，展示成本中心名称） ---------------
 const costCenters = [
-    { code: 'Amazon001', name: 'Amazon成本中心' },
-    { code: 'Finance001', name: '财务部成本中心' },
-    { code: 'eBay001', name: 'eBay成本中心' },
-    { code: 'TikTok001', name: 'TikTok成本中心' },
-    { code: 'Tmall001', name: '天猫成本中心' },
-    { code: 'HR001', name: '人力资源成本中心' },
-    { code: 'IT001', name: 'IT部成本中心' },
-    { code: 'Shopee001', name: 'Shopee成本中心' },
-    { code: 'Direct001', name: '直营电商成本中心' },
+    // 欧美事业部
+    { code: 'Amazon001', name: 'Amazon' },
+    { code: 'Walmart001', name: '沃尔玛' },
+    { code: 'eBay001', name: 'eBay' },
+    { code: 'USOffline001', name: '美国线下零售' },
+    // 亚太事业部
+    { code: 'China001', name: '中国' },
+    { code: 'EMEA001', name: 'EMEA' },
+    { code: 'TKUS001', name: '美国TK' },
+    // 全球共享中心
+    { code: 'SupplyChainTravel001', name: '供应链-差旅支出' },
+    { code: 'HR001', name: 'HR' },
+    { code: 'IT001', name: 'IT' },
+    { code: 'Finance001', name: '财务' },
+    { code: 'CEOOffice001', name: '总裁办' },
+    { code: 'ProductDev001', name: '产品开发部' },
+    { code: 'ProductRD001', name: '产品研发部' },
 ];
 
-// --------------- 预算版本数据 ---------------
+// --------------- 预算版本数据（每个版本只关联一个成本中心，版本与成本中心名称对应） ---------------
 const initialBudgetVersions = [
-    {
-        id: '1',
-        code: 'BV-2024-001',
-        name: '2024年度预算V1',
-        budgetYear: '2024',
-        effectiveDate: '2024-01-01',
-        totalBudget: 15000000,
-        status: 'active',
-        costCenterCodes: ['Amazon001', 'eBay001', 'TikTok001'],
-        createdBy: 'Lyn',
-        createdAt: '2023-11-15',
-        description: '2024年度主预算版本，覆盖欧美平台',
-    },
-    {
-        id: '2',
-        code: 'BV-2024-002',
-        name: '2024年度预算V2（修订）',
-        budgetYear: '2024',
-        effectiveDate: '2024-04-01',
-        totalBudget: 16500000,
-        status: 'active',
-        costCenterCodes: ['Amazon001', 'eBay001', 'TikTok001', 'Shopee001'],
-        createdBy: 'Lyn',
-        createdAt: '2024-03-20',
-        description: 'Q2修订版本，新增Shopee预算',
-    },
-    {
-        id: '3',
-        code: 'BV-2024-FIN',
-        name: '2024财务部预算',
-        budgetYear: '2024',
-        effectiveDate: '2024-01-01',
-        totalBudget: 2000000,
-        status: 'active',
-        costCenterCodes: ['Finance001'],
-        createdBy: 'Harry',
-        createdAt: '2023-11-20',
-        description: '财务部门年度预算',
-    },
-    {
-        id: '4',
-        code: 'BV-2024-IT',
-        name: '2024IT部预算',
-        budgetYear: '2024',
-        effectiveDate: '2024-01-01',
-        totalBudget: 3500000,
-        status: 'active',
-        costCenterCodes: ['IT001'],
-        createdBy: 'Harry',
-        createdAt: '2023-11-20',
-        description: 'IT基础设施及运维预算',
-    },
-    {
-        id: '5',
-        code: 'BV-2024-HR',
-        name: '2024人力资源预算',
-        budgetYear: '2024',
-        effectiveDate: '2024-01-01',
-        totalBudget: 1800000,
-        status: 'active',
-        costCenterCodes: ['HR001'],
-        createdBy: 'Lyn',
-        createdAt: '2023-11-18',
-        description: '人力资源部年度预算',
-    },
-    {
-        id: '6',
-        code: 'BV-2024-APAC',
-        name: '2024亚太区预算',
-        budgetYear: '2024',
-        effectiveDate: '2024-01-01',
-        totalBudget: 8000000,
-        status: 'active',
-        costCenterCodes: ['Tmall001', 'Shopee001', 'TikTok001'],
-        createdBy: 'Effie',
-        createdAt: '2023-11-25',
-        description: '亚太区电商平台预算',
-    },
-    {
-        id: '7',
-        code: 'BV-2023-001',
-        name: '2023年度预算',
-        budgetYear: '2023',
-        effectiveDate: '2023-01-01',
-        totalBudget: 12000000,
-        status: 'archived',
-        costCenterCodes: ['Amazon001', 'eBay001'],
-        createdBy: 'Lyn',
-        createdAt: '2022-11-10',
-        description: '2023年度预算（已归档）',
-    },
-    {
-        id: '8',
-        code: 'BV-2025-DRAFT',
-        name: '2025年度预算草案',
-        budgetYear: '2025',
-        effectiveDate: '2025-01-01',
-        totalBudget: 20000000,
-        status: 'draft',
-        costCenterCodes: ['Amazon001', 'eBay001', 'TikTok001', 'Shopee001', 'Tmall001'],
-        createdBy: 'Lyn',
-        createdAt: '2024-10-01',
-        description: '2025年度预算规划中',
-    },
+    // 欧美事业部 - Jason: Amazon / 沃尔玛 / eBay 各一表
+    { id: '1', code: 'BV-2024-001', name: '2024 Amazon预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 5000000, status: 'active', costCenterCode: 'Amazon001', createdBy: 'Jason', createdAt: '2023-11-15', description: '欧美事业部-Amazon' },
+    { id: '2', code: 'BV-2024-002', name: '2024 沃尔玛预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 4500000, status: 'active', costCenterCode: 'Walmart001', createdBy: 'Jason', createdAt: '2023-11-15', description: '欧美事业部-沃尔玛' },
+    { id: '3', code: 'BV-2024-003', name: '2024 eBay预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 3000000, status: 'active', costCenterCode: 'eBay001', createdBy: 'Jason', createdAt: '2023-11-15', description: '欧美事业部-eBay' },
+    { id: '4', code: 'BV-2024-004', name: '2024 美国线下零售预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 2500000, status: 'active', costCenterCode: 'USOffline001', createdBy: 'Jason', createdAt: '2023-11-16', description: '美国线下零售' },
+    // 亚太事业部 - Effie: 中国 / EMEA / 美国TK 各一表
+    { id: '5', code: 'BV-2024-005', name: '2024 中国预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 4000000, status: 'active', costCenterCode: 'China001', createdBy: 'Effie', createdAt: '2023-11-25', description: '亚太事业部-中国' },
+    { id: '6', code: 'BV-2024-006', name: '2024 EMEA预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 3500000, status: 'active', costCenterCode: 'EMEA001', createdBy: 'Effie', createdAt: '2023-11-25', description: '亚太事业部-EMEA' },
+    { id: '7', code: 'BV-2024-007', name: '2024 美国TK预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 2000000, status: 'active', costCenterCode: 'TKUS001', createdBy: 'Effie', createdAt: '2023-11-25', description: '亚太事业部-美国TK' },
+    // 全球共享中心 - 供应链差旅 / HR / IT / 财务 / 总裁办 / 产品开发 / 产品研发 各一表
+    { id: '8', code: 'BV-2024-SC', name: '2024 供应链差旅支出预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 800000, status: 'active', costCenterCode: 'SupplyChainTravel001', createdBy: 'Admin', createdAt: '2023-11-20', description: '供应链-差旅支出' },
+    { id: '9', code: 'BV-2024-HR', name: '2024 HR预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 1800000, status: 'active', costCenterCode: 'HR001', createdBy: 'Admin', createdAt: '2023-11-18', description: '人力资源' },
+    { id: '10', code: 'BV-2024-IT', name: '2024 IT预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 3500000, status: 'active', costCenterCode: 'IT001', createdBy: 'Admin', createdAt: '2023-11-20', description: 'IT' },
+    { id: '11', code: 'BV-2024-FIN', name: '2024 财务预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 2000000, status: 'active', costCenterCode: 'Finance001', createdBy: 'Admin', createdAt: '2023-11-20', description: '财务' },
+    { id: '12', code: 'BV-2024-CEO', name: '2024 总裁办预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 1200000, status: 'active', costCenterCode: 'CEOOffice001', createdBy: 'Admin', createdAt: '2023-11-20', description: '总裁办' },
+    { id: '13', code: 'BV-2024-PD', name: '2024 产品开发部预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 2200000, status: 'active', costCenterCode: 'ProductDev001', createdBy: 'Admin', createdAt: '2023-11-20', description: '产品开发部' },
+    { id: '14', code: 'BV-2024-RD', name: '2024 产品研发部预算', budgetYear: '2024', effectiveDate: '2024-01-01', totalBudget: 3800000, status: 'active', costCenterCode: 'ProductRD001', createdBy: 'Admin', createdAt: '2023-11-20', description: '产品研发部' },
 ];
 
 // --------------- 轻量级 UI 组件 ---------------
@@ -260,20 +181,21 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
         effectiveDate: '',
         totalBudget: '',
         status: 'draft',
-        costCenterCodes: [],
+        costCenterCode: '',
         description: '',
     });
 
     React.useEffect(() => {
+        const cc = version?.costCenterCode ?? (version?.costCenterCodes?.[0] ?? '');
         if (version) {
             setFormData({
                 code: version.code,
                 name: version.name,
                 budgetYear: version.budgetYear,
                 effectiveDate: version.effectiveDate,
-                totalBudget: version.totalBudget.toString(),
+                totalBudget: String(version.totalBudget ?? ''),
                 status: version.status,
-                costCenterCodes: [...version.costCenterCodes],
+                costCenterCode: cc,
                 description: version.description || '',
             });
         } else {
@@ -284,20 +206,11 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                 effectiveDate: new Date().toISOString().split('T')[0],
                 totalBudget: '',
                 status: 'draft',
-                costCenterCodes: [],
+                costCenterCode: '',
                 description: '',
             });
         }
     }, [version]);
-
-    const handleToggleCostCenter = (code) => {
-        setFormData(prev => ({
-            ...prev,
-            costCenterCodes: prev.costCenterCodes.includes(code)
-                ? prev.costCenterCodes.filter(c => c !== code)
-                : [...prev.costCenterCodes, code]
-        }));
-    };
 
     const handleSave = () => {
         const savedData = {
@@ -305,6 +218,7 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
             ...formData,
             id: version?.id || `${Date.now()}`,
             totalBudget: parseFloat(formData.totalBudget) || 0,
+            costCenterCode: formData.costCenterCode || undefined,
             createdBy: version?.createdBy || 'Admin',
             createdAt: version?.createdAt || new Date().toISOString().split('T')[0],
         };
@@ -392,24 +306,21 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">关联成本中心</label>
-                        <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto border rounded-lg p-3">
-                            {costCenters.map(cc => (
-                                <label key={cc.code} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.costCenterCodes.includes(cc.code)}
-                                        onChange={() => handleToggleCostCenter(cc.code)}
-                                        className="rounded border-gray-300 text-blue-600"
-                                    />
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-gray-900 truncate">{cc.name}</p>
-                                        <p className="text-xs text-gray-500">{cc.code}</p>
-                                    </div>
-                                </label>
-                            ))}
-                        </div>
-                        <p className="text-xs text-gray-400 mt-1">已选择 {formData.costCenterCodes.length} 个成本中心</p>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">关联成本中心（仅一个）</label>
+                        <Select
+                            value={formData.costCenterCode}
+                            onChange={(e) => setFormData({ ...formData, costCenterCode: e.target.value })}
+                            options={[
+                                { value: '', label: '请选择成本中心' },
+                                ...costCenters.map(cc => ({ value: cc.code, label: cc.name })),
+                            ]}
+                            className="w-full"
+                        />
+                        {formData.costCenterCode && (
+                            <p className="text-xs text-gray-500 mt-1">
+                                {costCenters.find(c => c.code === formData.costCenterCode)?.name}
+                            </p>
+                        )}
                     </div>
 
                     <div>
@@ -430,7 +341,7 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                     <PrimaryButton
                         icon={Save}
                         onClick={handleSave}
-                        disabled={!formData.code || !formData.name || !formData.effectiveDate || !formData.totalBudget}
+                        disabled={!formData.code || !formData.name || !formData.effectiveDate || !formData.totalBudget || !formData.costCenterCode}
                     >
                         保存
                     </PrimaryButton>
@@ -489,21 +400,20 @@ const BudgetDetailDrawer = ({ isOpen, onClose, version }) => {
                         </p>
                     </div>
 
-                    {/* 关联成本中心 */}
+                    {/* 关联成本中心（仅一个，展示名称） */}
                     <div>
-                        <p className="text-xs text-gray-500 mb-2">关联成本中心 ({version.costCenterCodes.length})</p>
-                        <div className="space-y-2">
-                            {version.costCenterCodes.map(code => {
-                                const cc = costCenters.find(c => c.code === code);
-                                return (
-                                    <div key={code} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                                        <Building2 className="w-4 h-4 text-gray-400" />
-                                        <span className="text-sm">{cc?.name || code}</span>
-                                        <code className="text-xs text-gray-400 ml-auto">{code}</code>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        <p className="text-xs text-gray-500 mb-2">成本中心</p>
+                        {(version.costCenterCode || version.costCenterCodes?.[0]) ? (
+                            <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                                <Building2 className="w-4 h-4 text-gray-400" />
+                                <span className="text-sm font-medium">
+                                    {costCenters.find(c => c.code === (version.costCenterCode || version.costCenterCodes?.[0]))?.name ||
+                                        version.costCenterCode || version.costCenterCodes?.[0]}
+                                </span>
+                            </div>
+                        ) : (
+                            <span className="text-sm text-gray-400">未关联</span>
+                        )}
                     </div>
 
                     {/* 描述 */}
@@ -595,6 +505,7 @@ export default function BudgetVersionPage({ onOpenDetail }) {
             code: `${item.code}-COPY`,
             name: `${item.name} (副本)`,
             status: 'draft',
+            costCenterCode: item.costCenterCode ?? item.costCenterCodes?.[0],
             createdAt: new Date().toISOString().split('T')[0],
             createdBy: 'Admin',
         };
@@ -717,7 +628,7 @@ export default function BudgetVersionPage({ onOpenDetail }) {
                                 <th className="px-4 py-3 text-left font-medium text-gray-600">生效日期</th>
                                 <th className="px-4 py-3 text-right font-medium text-gray-600">总预算额</th>
                                 <th className="px-4 py-3 text-left font-medium text-gray-600">状态</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">关联成本中心</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600">成本中心</th>
                                 <th className="px-4 py-3 text-left font-medium text-gray-600">创建人</th>
                                 <th className="px-4 py-3 text-left font-medium text-gray-600">操作</th>
                             </tr>
@@ -747,8 +658,8 @@ export default function BudgetVersionPage({ onOpenDetail }) {
                                             <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
                                         </td>
                                         <td className="px-4 py-3">
-                                            <span className="text-xs text-purple-600 font-medium">
-                                                {item.costCenterCodes.length} 个
+                                            <span className="text-sm font-medium text-gray-900">
+                                                {costCenters.find(c => c.code === (item.costCenterCode ?? item.costCenterCodes?.[0]))?.name ?? (item.costCenterCode || item.costCenterCodes?.[0] || '—')}
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 text-gray-600">{item.createdBy}</td>

@@ -184,6 +184,18 @@ const STATUS_CONFIG = {
     archived: { label: '已归档', variant: 'warning' },
 };
 
+const COST_CENTER_NAMES = {
+    Amazon001: 'Amazon', Walmart001: '沃尔玛', eBay001: 'eBay', USOffline001: '美国线下零售',
+    China001: '中国', EMEA001: 'EMEA', TKUS001: '美国TK',
+    SupplyChainTravel001: '供应链-差旅支出', HR001: 'HR', IT001: 'IT', Finance001: '财务',
+    CEOOffice001: '总裁办', ProductDev001: '产品开发部', ProductRD001: '产品研发部',
+};
+
+function getCostCenterName(version) {
+    const code = version.costCenterCode ?? version.costCenterCodes?.[0];
+    return code ? (COST_CENTER_NAMES[code] ?? code) : '—';
+}
+
 // --------------- 预算表格行组件 ---------------
 const BudgetRow = ({ category, budgetData, expandedIds, onToggle, onCellChange, level = 0 }) => {
     const hasChildren = category.children && category.children.length > 0;
@@ -303,7 +315,7 @@ export default function BudgetVersionDetailPage({ versionId, versionData, onClos
         effectiveDate: '2024-01-01',
         totalBudget: 15000000,
         status: 'active',
-        costCenterCodes: ['Amazon001', 'eBay001', 'TikTok001'],
+        costCenterCode: 'Amazon001',
         createdBy: 'Lyn',
         createdAt: '2023-11-15',
         description: '2024年度主预算版本，覆盖欧美平台',
@@ -406,10 +418,10 @@ export default function BudgetVersionDetailPage({ versionId, versionData, onClos
                         <span className="text-sm">{version.createdBy}</span>
                     </div>
                     <div>
-                        <p className="text-xs text-gray-500 mb-1">关联成本中心</p>
-                        <span className="text-sm text-purple-600 font-medium flex items-center gap-1">
-                            <Building2 className="w-4 h-4" />
-                            {version.costCenterCodes?.length || 0} 个
+                        <p className="text-xs text-gray-500 mb-1">成本中心</p>
+                        <span className="text-sm font-medium flex items-center gap-1">
+                            <Building2 className="w-4 h-4 text-gray-400" />
+                            {getCostCenterName(version)}
                         </span>
                     </div>
                     <div>
