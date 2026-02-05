@@ -38,6 +38,7 @@ import SalesTargetPage from './pages/SalesTargetPage';
 import ProductTagPage from './pages/ProductTagPage';
 import CodingRulePage from './pages/CodingRulePage';
 import ProductAttributePage from './pages/ProductAttributePage';
+import BudgetVersionPage from './pages/BudgetVersionPage';
 
 // 导航配置
 const navigationConfig = [
@@ -286,6 +287,8 @@ function App() {
                 );
             case '/finance-gov/expense-category':
                 return <ExpenseCategoryPage />;
+            case '/finance-gov/budget-version':
+                return <BudgetVersionPage />;
             case '/organization/structure':
                 return <OrganizationManagementPage />;
             case '/sales/target':

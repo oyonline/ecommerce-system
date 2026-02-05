@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import {
     Search, Plus, Edit2, Trash2, X, Save, Download, Upload,
     Building2, ChevronRight, Check, AlertCircle, Calendar,
-    User, FileText, ToggleLeft, Filter, MoreHorizontal
+    User, FileText, ToggleLeft, Filter, MoreHorizontal, History
 } from 'lucide-react';
 
 // 轻量工具：className 拼接
@@ -194,6 +194,58 @@ const initialCostCenters = [
         createdBy: 'Tate',
         createdAt: '2023-12-25',
         remark: '独立站DTC成本归集',
+    },
+];
+
+// --------------- 变更记录数据 ---------------
+const initialChangeLogs = [
+    {
+        id: '1',
+        costCenterId: '8',
+        costCenterCode: 'Walmart001',
+        costCenterName: 'Walmart成本中心',
+        changeType: 'disable',
+        oldStatus: 'active',
+        newStatus: 'inactive',
+        changeTime: '2024-12-15 14:30:00',
+        operator: 'Tate',
+        reason: '暂停运营，等待重新评估',
+    },
+    {
+        id: '2',
+        costCenterId: '8',
+        costCenterCode: 'Walmart001',
+        costCenterName: 'Walmart成本中心',
+        changeType: 'enable',
+        oldStatus: 'inactive',
+        newStatus: 'active',
+        changeTime: '2024-11-01 09:00:00',
+        operator: 'Tate',
+        reason: '试运营启动',
+    },
+    {
+        id: '3',
+        costCenterId: '1',
+        costCenterCode: 'Amazon001',
+        costCenterName: 'Amazon成本中心',
+        changeType: 'disable',
+        oldStatus: 'active',
+        newStatus: 'inactive',
+        changeTime: '2024-06-01 10:00:00',
+        operator: 'Lyn',
+        reason: '年中盘点暂停',
+    },
+    {
+        id: '4',
+        costCenterId: '1',
+        costCenterCode: 'Amazon001',
+        costCenterName: 'Amazon成本中心',
+        changeType: 'enable',
+        oldStatus: 'inactive',
+        newStatus: 'active',
+        changeTime: '2024-06-15 08:30:00',
+        operator: 'Lyn',
+        reason: '盘点结束恢复',
     },
 ];
 
@@ -503,15 +555,127 @@ const CostCenterEditDrawer = ({ isOpen, onClose, costCenter, onSave }) => {
     );
 };
 
+// --------------- 变更记录弹窗 ---------------
+const ChangeLogModal = ({ isOpen, onClose, logs, costCenterFilter }) => {
+    const [filterCode, setFilterCode] = useState('');
+
+    if (!isOpen) return null;
+
+    // 如果传入了 costCenterFilter，只显示该成本中心的记录
+    const filteredLogs = logs.filter(log => {
+        if (costCenterFilter) {
+            return log.costCenterId === costCenterFilter;
+        }
+        if (filterCode) {
+            return log.costCenterCode.toLowerCase().includes(filterCode.toLowerCase()) ||
+                   log.costCenterName.toLowerCase().includes(filterCode.toLowerCase());
+        }
+        return true;
+    }).sort((a, b) => new Date(b.changeTime) - new Date(a.changeTime));
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+            <div className="relative w-[800px] max-h-[80vh] bg-white rounded-xl shadow-xl flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                    <div className="flex items-center gap-3">
+                        <History className="w-5 h-5 text-blue-600" />
+                        <h2 className="text-lg font-semibold">变更记录</h2>
+                    </div>
+                    <IconButton icon={X} onClick={onClose} />
+                </div>
+
+                {/* Search */}
+                {!costCenterFilter && (
+                    <div className="px-6 py-3 border-b bg-gray-50">
+                        <Input
+                            value={filterCode}
+                            onChange={(e) => setFilterCode(e.target.value)}
+                            placeholder="搜索成本中心编码或名称..."
+                            icon={Search}
+                            className="w-64"
+                        />
+                    </div>
+                )}
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-6">
+                    {filteredLogs.length === 0 ? (
+                        <div className="text-center py-12 text-gray-500">
+                            <History className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                            <p>暂无变更记录</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {filteredLogs.map(log => (
+                                <div key={log.id} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                                    <div className={cn(
+                                        'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0',
+                                        log.changeType === 'disable' ? 'bg-red-100' : 'bg-green-100'
+                                    )}>
+                                        {log.changeType === 'disable' ? (
+                                            <AlertCircle className="w-5 h-5 text-red-600" />
+                                        ) : (
+                                            <Check className="w-5 h-5 text-green-600" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-medium text-gray-900">{log.costCenterName}</span>
+                                            <code className="text-xs bg-gray-200 px-2 py-0.5 rounded">{log.costCenterCode}</code>
+                                            <Badge variant={log.changeType === 'disable' ? 'danger' : 'success'}>
+                                                {log.changeType === 'disable' ? '停用' : '启用'}
+                                            </Badge>
+                                        </div>
+                                        <p className="text-sm text-gray-600 mb-2">
+                                            状态从 <span className="font-medium">{log.oldStatus === 'active' ? '启用' : '停用'}</span>
+                                            {' '}变更为{' '}
+                                            <span className="font-medium">{log.newStatus === 'active' ? '启用' : '停用'}</span>
+                                        </p>
+                                        {log.reason && (
+                                            <p className="text-sm text-gray-500 mb-2">
+                                                <span className="text-gray-400">原因：</span>{log.reason}
+                                            </p>
+                                        )}
+                                        <div className="flex items-center gap-4 text-xs text-gray-400">
+                                            <span className="flex items-center gap-1">
+                                                <User className="w-3 h-3" />
+                                                {log.operator}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <Calendar className="w-3 h-3" />
+                                                {log.changeTime}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="px-6 py-4 border-t bg-gray-50 text-sm text-gray-500">
+                    共 {filteredLogs.length} 条变更记录
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --------------- 主组件 ---------------
 export default function CostCenterPage() {
     const [costCenters, setCostCenters] = useState(initialCostCenters);
+    const [changeLogs, setChangeLogs] = useState(initialChangeLogs);
     const [searchText, setSearchText] = useState('');
     const [filterStatus, setFilterStatus] = useState('');
     const [filterDept, setFilterDept] = useState('');
     const [filterCustomer, setFilterCustomer] = useState('');
     const [editingItem, setEditingItem] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isChangeLogOpen, setIsChangeLogOpen] = useState(false);
+    const [changeLogFilter, setChangeLogFilter] = useState(null); // 筛选特定成本中心的变更记录
 
     // 过滤数据
     const filteredData = costCenters.filter(item => {
@@ -546,11 +710,46 @@ export default function CostCenterPage() {
     };
 
     const handleToggleStatus = (itemId) => {
-        setCostCenters(prev => prev.map(item =>
-            item.id === itemId
-                ? { ...item, status: item.status === 'active' ? 'inactive' : 'active' }
-                : item
+        const item = costCenters.find(c => c.id === itemId);
+        if (!item) return;
+
+        const oldStatus = item.status;
+        const newStatus = oldStatus === 'active' ? 'inactive' : 'active';
+
+        // 更新成本中心状态
+        setCostCenters(prev => prev.map(c =>
+            c.id === itemId ? { ...c, status: newStatus } : c
         ));
+
+        // 记录变更日志
+        const newLog = {
+            id: `${Date.now()}`,
+            costCenterId: item.id,
+            costCenterCode: item.code,
+            costCenterName: item.name,
+            changeType: newStatus === 'inactive' ? 'disable' : 'enable',
+            oldStatus: oldStatus,
+            newStatus: newStatus,
+            changeTime: new Date().toLocaleString('zh-CN', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).replace(/\//g, '-'),
+            operator: 'Admin',
+            reason: '',
+        };
+        setChangeLogs(prev => [newLog, ...prev]);
+    };
+
+    // 打开特定成本中心的变更记录
+    const handleViewChangeLog = (itemId) => {
+        setChangeLogFilter(itemId);
+        setIsChangeLogOpen(true);
+    };
+
+    // 打开全部变更记录
+    const handleViewAllChangeLogs = () => {
+        setChangeLogFilter(null);
+        setIsChangeLogOpen(true);
     };
 
     const handleDelete = (itemId) => {
@@ -581,6 +780,7 @@ export default function CostCenterPage() {
                     <p className="text-sm text-gray-500 mt-1">管理企业成本中心，关联部门和客户分组</p>
                 </div>
                 <div className="flex items-center gap-3">
+                    <SecondaryButton icon={History} onClick={handleViewAllChangeLogs}>变更记录</SecondaryButton>
                     <SecondaryButton icon={Upload}>导入</SecondaryButton>
                     <SecondaryButton icon={Download}>导出</SecondaryButton>
                     <PrimaryButton icon={Plus} onClick={handleAdd}>新建成本中心</PrimaryButton>
@@ -744,6 +944,7 @@ export default function CostCenterPage() {
                                     <td className="px-4 py-3">
                                         <div className="flex items-center gap-1">
                                             <IconButton icon={Edit2} onClick={() => handleEdit(item)} title="编辑" />
+                                            <IconButton icon={History} onClick={() => handleViewChangeLog(item.id)} title="变更记录" />
                                             <IconButton icon={Trash2} onClick={() => handleDelete(item.id)} title="删除" />
                                         </div>
                                     </td>
@@ -779,6 +980,17 @@ export default function CostCenterPage() {
                 onClose={() => setIsDrawerOpen(false)}
                 costCenter={editingItem}
                 onSave={handleSave}
+            />
+
+            {/* 变更记录弹窗 */}
+            <ChangeLogModal
+                isOpen={isChangeLogOpen}
+                onClose={() => {
+                    setIsChangeLogOpen(false);
+                    setChangeLogFilter(null);
+                }}
+                logs={changeLogs}
+                costCenterFilter={changeLogFilter}
             />
         </div>
     );
