@@ -17,48 +17,75 @@
 ## ✨ 核心功能模块
 
 ### 1. 产品中心
-- **产品主数据管理**: SPU/SKU 管理、产品信息维护、规格管理
+- **产品主数据管理**: SPU/SKU 管理、产品信息维护、规格管理、SKU 详情
 - **BOM 管理**: 物料清单管理、成本核算
 - **品牌管理**: 品牌信息维护、品牌关联产品管理
 - **产品结构分类**: 品牌-类目-系列三级分类体系
 - **类目属性模板管理**: 类目属性模板配置、版本管理
+- **产品标签**: 产品标签管理
+- **编码规则**: 编码规则配置
+- **属性管理**: 产品属性管理
 
 ### 2. 销售与计划
-- 销售目标管理
-- 销售达成分析
+- **销售目标**: 销售目标管理
+- **销售达成分析**: 销售达成分析
+- **数据聚合分析**: 销售数据聚合
+- **滞销分析**: 滞销品分析
+- **销量预测**: 销量预测
+- **计划测算看板**: 计划测算看板
 
 ### 3. 供应链采购管理
-- 供应商管理
-- 采购流程管理
+- **供应商管理**: 供应商信息维护
+- **SKU迭代管理**: SKU 迭代与版本管理
+- **采购计划执行跟进**: 采购计划执行与跟进
+- **供应商绩效**: 供应商绩效评估
 
 ### 4. 物流与报关
-- 物流计划执行
-- 报关管理
+- **物流计划执行**: 物流计划与执行
+- **备货试算**: 备货试算
+- **物流单-跨境 / 国内**: 跨境与国内物流单管理
+- **报关管理 / 清关管理**: 报关与清关流程
+- **上架索赔**: 上架索赔
+- **物流对账**: 物流对账
+- **物流商基础信息**: 物流商基础信息维护
 
 ### 5. 质量管理
-- 质量检验流程
-- 质量数据管理
+- **入库质检**: 入库质检流程
+- **客诉质量**: 客诉质量处理
+- **质量分析**: 质量数据分析
 
 ### 6. 财务治理
 - **店铺与部门归属映射**: 电商店铺与组织部门、成本中心的对应关系维护
 - **成本中心**: 成本中心配置与管理
 - **分摊规则**: 费用分摊规则设置
-- **费用事实**: 费用事实数据管理
 - **费用类别**: 预算费用类别管理、金蝶科目映射、经营管理视图
+- **费用事实**: 费用事实数据管理
+- **预算版本管理**: 预算版本管理
+- **费用审批**: 费用审批列表与审批单详情
 
-### 7. 财务与经营分析
-- 财务报表分析
-- 经营数据看板（只读）
+### 7. 财务与经营分析（只读）
+- **收入分析**: 收入分析
+- **成本分析**: 成本分析
+- **利润分析**: 利润分析
+- **经营达成情况**: 经营达成情况
 
 ### 8. 组织与权限
 - **组织架构管理**: 组织架构维护、部门管理
+- **用户管理**: 用户管理
+- **角色&权限**: 角色与权限配置
 
 ### 9. 审批与任务
 - 审批流程管理
 - 任务跟踪
 
-### 10. 系统设置
-- 系统参数配置（IT专用）
+### 10. 系统设置（IT专用）
+- **基础配置**: 基础配置
+- **数据字典**: 数据字典
+- **枚举与规则**: 枚举与规则
+- **接口同步**: 接口同步
+- **参数设置**: 参数设置
+- **定时任务**: 定时任务
+- **系统日志**: 系统日志
 
 ## 📁 项目结构
 
@@ -66,31 +93,34 @@
 ecommerce-system/
 ├── src/
 │   ├── pages/              # 页面组件
-│   │   ├── HomePage.js                    # 首页
-│   │   ├── ProductMasterPage.js           # 产品主数据
-│   │   ├── BOMManagementPage.js           # BOM管理
-│   │   ├── BrandManagementPage.js         # 品牌管理
-│   │   ├── ProductStructurePage.js        # 产品结构分类
-│   │   ├── CategoryTemplatePage.js        # 类目属性模板
-│   │   ├── SkuDetailPage.simple.js       # SKU详情页
-│   │   ├── StoreDeptMappingPage.js        # 店铺与部门归属映射
-│   │   ├── StoreDeptEditStoreDrawer.js    # 店铺编辑抽屉
-│   │   ├── CostCenterPage.js              # 成本中心
-│   │   ├── AllocationRulePage.js         # 分摊规则
-│   │   ├── ExpenseFactPage.js             # 费用事实
-│   │   ├── ExpenseCategoryPage.js          # 费用类别
-│   │   ├── ExpenseApprovalListPage.simple.js    # 费用审批列表
-│   │   ├── ExpenseApprovalDetailPage.simple.js  # 费用审批详情
-│   │   ├── OrganizationManagementPage.js  # 组织架构管理
-│   │   └── PlaceholderPage.js             # 占位页面
-│   ├── App.js              # 主应用组件
-│   ├── index.js            # 入口文件
-│   └── index.css           # 全局样式（包含 Tailwind）
-├── public/                 # 静态资源
-├── tailwind.config.js      # Tailwind 配置
-├── postcss.config.js       # PostCSS 配置
-└── package.json            # 项目依赖
-
+│   │   ├── HomePage.js                         # 首页
+│   │   ├── ProductMasterPage.js                # 产品主数据
+│   │   ├── SkuDetailPage.simple.js             # SKU 详情
+│   │   ├── BOMManagementPage.js                # BOM 管理
+│   │   ├── BrandManagementPage.js              # 品牌管理
+│   │   ├── ProductStructurePage.js             # 产品结构分类
+│   │   ├── CategoryTemplatePage.js             # 类目属性模板
+│   │   ├── ProductTagPage.js                    # 产品标签
+│   │   ├── CodingRulePage.js                   # 编码规则
+│   │   ├── ProductAttributePage.js             # 属性管理
+│   │   ├── SalesTargetPage.js                  # 销售目标
+│   │   ├── StoreDeptMappingPage.js             # 店铺与部门归属映射
+│   │   ├── StoreDeptEditStoreDrawer.js         # 店铺编辑抽屉
+│   │   ├── CostCenterPage.js                   # 成本中心
+│   │   ├── AllocationRulePage.js               # 分摊规则
+│   │   ├── ExpenseCategoryPage.js              # 费用类别
+│   │   ├── ExpenseFactPage.js                  # 费用事实
+│   │   ├── ExpenseApprovalListPage.simple.js   # 费用审批列表
+│   │   ├── ExpenseApprovalDetailPage.simple.js # 费用审批详情
+│   │   ├── OrganizationManagementPage.js       # 组织架构管理
+│   │   └── PlaceholderPage.js                  # 占位页面（未实现功能入口）
+│   ├── App.js               # 主应用与导航
+│   ├── index.js             # 入口文件
+│   └── index.css            # 全局样式（含 Tailwind）
+├── public/                  # 静态资源
+├── tailwind.config.js       # Tailwind 配置
+├── postcss.config.js        # PostCSS 配置
+└── package.json             # 项目依赖
 ```
 
 ## 🚀 快速开始
@@ -178,4 +208,4 @@ npm test
 
 ---
 
-**最后更新**: 2026年1月
+**最后更新**: 2026年2月
