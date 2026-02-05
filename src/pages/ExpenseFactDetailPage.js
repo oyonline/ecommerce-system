@@ -176,7 +176,7 @@ function ExpenseFactDetailPage({ record, onClose }) {
           </div>
         </Card>
 
-        {/* 预算执行（增强：本次剩余、预计剩余） */}
+        {/* 预算执行 */}
         <Card className="p-5">
           <h4 className="text-sm font-medium text-gray-900 mb-4">预算执行</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
@@ -189,16 +189,12 @@ function ExpenseFactDetailPage({ record, onClose }) {
               <span className="text-gray-900">{record.budgetVersion}</span>
             </div>
             <div>
-              <span className="text-gray-500">预算执行率：</span>
-              <span
-                className={cn(
-                  'font-medium',
-                  record.budgetUsageRate >= 90 ? 'text-red-600' :
-                  record.budgetUsageRate >= 70 ? 'text-orange-600' : 'text-green-600'
-                )}
-              >
-                {record.budgetUsageRate}%
-              </span>
+              <span className="text-gray-500">已使用：</span>
+              <span className="text-gray-900">{formatCurrency(record.budgetUsed || 0, record.currency)}</span>
+            </div>
+            <div>
+              <span className="text-gray-500">总额度：</span>
+              <span className="text-gray-900">{formatCurrency(record.budgetTotal || 0, record.currency)}</span>
             </div>
             <div>
               <span className="text-gray-500">本次剩余：</span>
@@ -222,11 +218,19 @@ function ExpenseFactDetailPage({ record, onClose }) {
               </div>
             )}
           </div>
-          {/* 预算进度条 */}
-          <div className="mt-4">
-            <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>已使用 {formatCurrency(record.budgetUsed || 0, record.currency)}</span>
-              <span>总额度 {formatCurrency(record.budgetTotal || 0, record.currency)}</span>
+          {/* 预算执行率与进度条一起展示 */}
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-gray-500">预算执行率</span>
+              <span
+                className={cn(
+                  'font-medium',
+                  record.budgetUsageRate >= 90 ? 'text-red-600' :
+                  record.budgetUsageRate >= 70 ? 'text-orange-600' : 'text-green-600'
+                )}
+              >
+                {record.budgetUsageRate}%
+              </span>
             </div>
             <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
