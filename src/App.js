@@ -1,5 +1,5 @@
 // src/App.js
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
     Home,
     BarChart3,
@@ -39,6 +39,7 @@ import ProductTagPage from './pages/ProductTagPage';
 import CodingRulePage from './pages/CodingRulePage';
 import ProductAttributePage from './pages/ProductAttributePage';
 import BudgetVersionPage from './pages/BudgetVersionPage';
+import BudgetVersionDetailPage from './pages/BudgetVersionDetailPage';
 
 // 导航配置
 const navigationConfig = [
@@ -212,27 +213,120 @@ const NavItem = ({item, level = 0, isActive, onNavigate, expandedItems, toggleEx
     );
 };
 
+// --------------- 标签页组件 ---------------
+const TabBar = ({ tabs, activeTabId, onTabClick, onTabClose }) => {
+    if (tabs.length === 0) return null;
+
+    return (
+        <div className="bg-white border-b border-gray-200 flex items-center overflow-x-auto">
+            <div className="flex items-center px-2 py-1 gap-1 min-w-0">
+                {tabs.map(tab => (
+                    <div
+                        key={tab.id}
+                        className={`group flex items-center gap-2 px-3 py-1.5 rounded-t-lg cursor-pointer transition-colors min-w-0 max-w-[200px] ${
+                            activeTabId === tab.id
+                                ? 'bg-blue-50 text-blue-600 border border-b-0 border-gray-200'
+                                : 'text-gray-600 hover:bg-gray-100'
+                        }`}
+                        onClick={() => onTabClick(tab.id)}
+                    >
+                        <span className="text-sm truncate flex-1">{tab.name}</span>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onTabClose(tab.id);
+                            }}
+                            className="p-0.5 rounded hover:bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                        >
+                            <X className="w-3 h-3" />
+                        </button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 function App() {
     const [currentPath, setCurrentPath] = useState('/home');
     const [currentPageName, setCurrentPageName] = useState('首页');
     const [expandedItems, setExpandedItems] = useState(['product']);
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [currentRecord, setCurrentRecord] = useState(null); // 传给详情页
+    const [currentRecord, setCurrentRecord] = useState(null);
+
+    // 标签页状态
+    const [tabs, setTabs] = useState([]);
+    const [activeTabId, setActiveTabId] = useState(null);
 
     const openSkuDetail = (row) => {
         setCurrentRecord(row || null);
         handleNavigate('/product/sku-detail', 'SKU 详情');
     };
 
+    // 打开新标签页
+    const openTab = useCallback((tabInfo) => {
+        const { id, name, path, data } = tabInfo;
+
+        // 检查是否已存在相同ID的标签
+        const existingTab = tabs.find(t => t.id === id);
+        if (existingTab) {
+            setActiveTabId(id);
+            return;
+        }
+
+        // 添加新标签
+        setTabs(prev => [...prev, { id, name, path, data }]);
+        setActiveTabId(id);
+    }, [tabs]);
+
+    // 关闭标签页
+    const closeTab = useCallback((tabId) => {
+        setTabs(prev => {
+            const newTabs = prev.filter(t => t.id !== tabId);
+            // 如果关闭的是当前激活的标签，切换到最后一个标签或清空
+            if (activeTabId === tabId) {
+                if (newTabs.length > 0) {
+                    setActiveTabId(newTabs[newTabs.length - 1].id);
+                } else {
+                    setActiveTabId(null);
+                }
+            }
+            return newTabs;
+        });
+    }, [activeTabId]);
+
+    // 切换标签页
+    const switchTab = useCallback((tabId) => {
+        setActiveTabId(tabId);
+    }, []);
+
     const handleNavigate = (path, name) => {
         setCurrentPath(path);
         setCurrentPageName(name);
+        // 导航时取消激活的标签页，显示主内容
+        setActiveTabId(null);
     };
 
     const toggleExpand = (itemId) => {
         setExpandedItems(prev =>
             prev.includes(itemId) ? prev.filter(id => id !== itemId) : [...prev, itemId]
         );
+    };
+
+    // 渲染标签页内容
+    const renderTabContent = (tab) => {
+        switch (tab.path) {
+            case '/finance-gov/budget-version/detail':
+                return (
+                    <BudgetVersionDetailPage
+                        versionId={tab.data?.id}
+                        versionData={tab.data}
+                        onClose={() => closeTab(tab.id)}
+                    />
+                );
+            default:
+                return <PlaceholderPage pageName={tab.name} path={tab.path} />;
+        }
     };
 
     const renderPage = () => {
@@ -288,7 +382,7 @@ function App() {
             case '/finance-gov/expense-category':
                 return <ExpenseCategoryPage />;
             case '/finance-gov/budget-version':
-                return <BudgetVersionPage />;
+                return <BudgetVersionPage onOpenDetail={openTab} />;
             case '/organization/structure':
                 return <OrganizationManagementPage />;
             case '/sales/target':
@@ -297,6 +391,9 @@ function App() {
                 return <PlaceholderPage pageName={currentPageName} path={currentPath} />;
         }
     };
+
+    // 获取当前显示的标签页
+    const activeTab = tabs.find(t => t.id === activeTabId);
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -337,14 +434,19 @@ function App() {
 
             {/* 主内容区 */}
             <div className="flex-1 flex flex-col min-h-0">
-                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+                {/* 顶部头部 */}
+                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
                     <div className="flex items-center gap-4">
                         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-gray-100 rounded-lg">
                             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                         </button>
                         <div>
-                            <h2 className="text-lg font-semibold text-gray-800">{currentPageName}</h2>
-                            <p className="text-xs text-gray-500">{currentPath}</p>
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                {activeTabId && activeTab ? activeTab.name : currentPageName}
+                            </h2>
+                            <p className="text-xs text-gray-500">
+                                {activeTabId && activeTab ? activeTab.path : currentPath}
+                            </p>
                         </div>
                     </div>
                     <div className="text-sm text-gray-600">
@@ -352,8 +454,21 @@ function App() {
                     </div>
                 </header>
 
+                {/* 标签栏 */}
+                <TabBar
+                    tabs={tabs}
+                    activeTabId={activeTabId}
+                    onTabClick={switchTab}
+                    onTabClose={closeTab}
+                />
+
+                {/* 主内容 */}
                 <main className="flex-1 min-h-0 overflow-auto p-6">
-                    {renderPage()}
+                    {activeTabId && activeTab ? (
+                        renderTabContent(activeTab)
+                    ) : (
+                        renderPage()
+                    )}
                 </main>
             </div>
         </div>

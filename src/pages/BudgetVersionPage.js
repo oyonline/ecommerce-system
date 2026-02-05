@@ -525,13 +525,12 @@ const BudgetDetailDrawer = ({ isOpen, onClose, version }) => {
 };
 
 // --------------- 主组件 ---------------
-export default function BudgetVersionPage() {
+export default function BudgetVersionPage({ onOpenDetail }) {
     const [versions, setVersions] = useState(initialBudgetVersions);
     const [searchText, setSearchText] = useState('');
     const [filterYear, setFilterYear] = useState('');
     const [filterStatus, setFilterStatus] = useState('');
     const [editingItem, setEditingItem] = useState(null);
-    const [viewingItem, setViewingItem] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     // 过滤数据
@@ -563,7 +562,14 @@ export default function BudgetVersionPage() {
     };
 
     const handleView = (item) => {
-        setViewingItem(item);
+        if (onOpenDetail) {
+            onOpenDetail({
+                id: `budget-version-${item.id}`,
+                name: `预算详情: ${item.name}`,
+                path: '/finance-gov/budget-version/detail',
+                data: item,
+            });
+        }
     };
 
     const handleDelete = (itemId) => {
@@ -787,13 +793,6 @@ export default function BudgetVersionPage() {
                 onClose={() => setIsDrawerOpen(false)}
                 version={editingItem}
                 onSave={handleSave}
-            />
-
-            {/* 详情抽屉 */}
-            <BudgetDetailDrawer
-                isOpen={!!viewingItem}
-                onClose={() => setViewingItem(null)}
-                version={viewingItem}
             />
         </div>
     );
