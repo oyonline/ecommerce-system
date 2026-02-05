@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import {
     Search, Plus, Edit2, Trash2, X, Save, Download, Upload,
     FileText, Calendar, DollarSign, Check, AlertCircle,
-    Building2, Copy, Eye, Lock, Unlock
+    Building2, Copy, Eye, Lock, Unlock, Paperclip
 } from 'lucide-react';
 
 // 轻量工具：className 拼接
@@ -213,11 +213,17 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
     }, [version]);
 
     const handleSave = () => {
+        const isNew = !version;
+        const code = isNew
+            ? `BV-${formData.budgetYear}-${Date.now().toString(36).slice(-5).toUpperCase()}`
+            : formData.code;
+        const totalBudget = isNew ? 0 : (parseFloat(formData.totalBudget) || 0);
         const savedData = {
             ...version,
             ...formData,
             id: version?.id || `${Date.now()}`,
-            totalBudget: parseFloat(formData.totalBudget) || 0,
+            code,
+            totalBudget,
             costCenterCode: formData.costCenterCode || undefined,
             createdBy: version?.createdBy || 'Admin',
             createdAt: version?.createdAt || new Date().toISOString().split('T')[0],
@@ -244,12 +250,14 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                 <div className="flex-1 overflow-y-auto p-6 space-y-5">
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">版本编码 *</label>
-                            <Input
-                                value={formData.code}
-                                onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                                placeholder="如 BV-2024-001"
-                            />
+                            <label className="block text-sm font-medium text-gray-700 mb-1">版本编码</label>
+                            <div className="h-9 px-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-600 text-sm flex items-center">
+                                {version ? (
+                                    <code className="text-xs bg-gray-100 px-2 py-0.5 rounded">{formData.code}</code>
+                                ) : (
+                                    <span>系统生成（保存时自动生成）</span>
+                                )}
+                            </div>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">预算年度 *</label>
@@ -271,7 +279,7 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={cn('grid gap-4', version ? 'grid-cols-2' : 'grid-cols-1')}>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">生效日期 *</label>
                             <Input
@@ -280,15 +288,17 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                                 onChange={(e) => setFormData({ ...formData, effectiveDate: e.target.value })}
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">总预算额 (元) *</label>
-                            <Input
-                                type="number"
-                                value={formData.totalBudget}
-                                onChange={(e) => setFormData({ ...formData, totalBudget: e.target.value })}
-                                placeholder="15000000"
-                            />
-                        </div>
+                        {version && (
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">总预算额 (元)</label>
+                                <Input
+                                    type="number"
+                                    value={formData.totalBudget}
+                                    onChange={(e) => setFormData({ ...formData, totalBudget: e.target.value })}
+                                    placeholder="15000000"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div>
@@ -333,6 +343,17 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                             className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">附件</label>
+                        <div
+                            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 hover:bg-blue-50/50 transition-colors cursor-pointer"
+                        >
+                            <Paperclip className="w-10 h-10 mx-auto text-gray-400 mb-2" />
+                            <p className="text-sm text-gray-600">点击或拖拽文件到此处上传</p>
+                            <p className="text-xs text-gray-400 mt-1">支持 Excel、PDF 等，单文件不超过 10MB</p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Footer */}
@@ -341,7 +362,7 @@ const BudgetVersionEditDrawer = ({ isOpen, onClose, version, onSave }) => {
                     <PrimaryButton
                         icon={Save}
                         onClick={handleSave}
-                        disabled={!formData.code || !formData.name || !formData.effectiveDate || !formData.totalBudget || !formData.costCenterCode}
+                        disabled={!formData.name || !formData.effectiveDate || !formData.costCenterCode}
                     >
                         保存
                     </PrimaryButton>
