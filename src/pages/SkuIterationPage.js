@@ -555,118 +555,102 @@ const SkuIterationPage = ({ data: externalData }) => {
                                 <span className="text-xs text-gray-400">（共 {spu.versions.length} 个版本）</span>
                               </div>
 
-                              {/* 版本时间线 */}
-                              <div className="relative">
+                              {/* 版本网格布局 */}
+                              <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
                                 {spu.versions.map((version, index) => {
                                   const priceChange = getPriceChange(spu.versions, index);
-                                  const isLast = index === spu.versions.length - 1;
 
                                   return (
-                                    <div key={version.id} className="relative pl-8 pb-6">
-                                      {/* 时间线连接线 */}
-                                      {!isLast && (
-                                        <div className="absolute left-[11px] top-6 bottom-0 w-0.5 bg-gray-300" />
-                                      )}
-
-                                      {/* 时间线节点 */}
-                                      <div className={`absolute left-0 top-1 w-6 h-6 rounded-full flex items-center justify-center ${
-                                        version.status === '在售'
-                                          ? 'bg-green-500 text-white'
-                                          : 'bg-gray-300 text-gray-600'
+                                    <div key={version.id} className={`bg-white rounded-lg border ${
+                                      version.status === '在售' ? 'border-green-300 shadow-md ring-1 ring-green-100' : 'border-gray-200'
+                                    }`}>
+                                      {/* 卡片头部 */}
+                                      <div className={`flex items-center justify-between p-3 border-b rounded-t-lg ${
+                                        version.status === '在售' ? 'bg-green-50' : 'bg-gray-50'
                                       }`}>
-                                        {version.type === 'initial' ? '1' : version.iterationNo + 1}
+                                        <div className="flex items-center gap-2">
+                                          {/* 版本序号徽章 */}
+                                          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                                            version.status === '在售'
+                                              ? 'bg-green-500 text-white'
+                                              : 'bg-gray-300 text-gray-600'
+                                          }`}>
+                                            {version.type === 'initial' ? '1' : version.iterationNo + 1}
+                                          </div>
+                                          <span className="font-mono text-sm font-medium text-gray-800">
+                                            {version.versionNo}
+                                          </span>
+                                          <span className={`px-1.5 py-0.5 rounded text-xs ${
+                                            version.type === 'initial'
+                                              ? 'bg-blue-100 text-blue-700'
+                                              : 'bg-orange-100 text-orange-700'
+                                          }`}>
+                                            {version.type === 'initial' ? '初始' : `迭代${version.iterationNo}`}
+                                          </span>
+                                        </div>
+                                        <span className={`flex items-center gap-1 px-2 py-0.5 rounded text-xs border ${getStatusStyle(version.status)}`}>
+                                          {getStatusIcon(version.status)}
+                                          {version.status}
+                                        </span>
                                       </div>
 
-                                      {/* 版本卡片 */}
-                                      <div className={`bg-white rounded-lg border ${
-                                        version.status === '在售' ? 'border-green-200 shadow-sm' : 'border-gray-200'
-                                      }`}>
-                                        {/* 卡片头部 */}
-                                        <div className="flex items-center justify-between p-3 border-b bg-gray-50 rounded-t-lg">
-                                          <div className="flex items-center gap-3">
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                              version.type === 'initial'
-                                                ? 'bg-blue-100 text-blue-700'
-                                                : 'bg-orange-100 text-orange-700'
-                                            }`}>
-                                              {version.type === 'initial' ? '初始版本' : `迭代 ${version.iterationNo}`}
-                                            </span>
-                                            <span className="font-mono text-sm font-medium text-gray-800">
-                                              {version.versionNo}
-                                            </span>
-                                            <span className={`flex items-center gap-1 px-2 py-1 rounded text-xs border ${getStatusStyle(version.status)}`}>
-                                              {getStatusIcon(version.status)}
-                                              {version.status}
-                                            </span>
-                                          </div>
-                                          <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <Calendar className="w-3.5 h-3.5" />
-                                            {version.type === 'initial' ? version.startTime : version.iterationTime}
+                                      {/* 卡片内容 */}
+                                      <div className="p-3 space-y-2">
+                                        {/* SKU编码 */}
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-xs text-gray-400">SKU</span>
+                                          <span className="font-mono text-xs text-blue-600">{version.sku}</span>
+                                        </div>
+
+                                        {/* 时间 */}
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-xs text-gray-400">{version.type === 'initial' ? '开始时间' : '迭代时间'}</span>
+                                          <span className="text-xs text-gray-600">{version.type === 'initial' ? version.startTime : version.iterationTime}</span>
+                                        </div>
+
+                                        {/* 采购单价 */}
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-xs text-gray-400">采购单价</span>
+                                          <div className="flex items-center gap-1">
+                                            <span className="font-medium text-gray-800">{formatPrice(version.unitPrice)}</span>
+                                            {priceChange && priceChange.type !== 'same' && (
+                                              <span className={`text-xs ${priceChange.type === 'up' ? 'text-red-500' : 'text-green-500'}`}>
+                                                {priceChange.percent}
+                                              </span>
+                                            )}
                                           </div>
                                         </div>
 
-                                        {/* 卡片内容 */}
-                                        <div className="p-3">
-                                          <div className="grid grid-cols-5 gap-4">
-                                            {/* SKU编码 */}
-                                            <div>
-                                              <p className="text-xs text-gray-400 mb-1">SKU编码</p>
-                                              <p className="font-mono text-xs text-blue-600">{version.sku}</p>
-                                            </div>
+                                        {/* 生产周期 */}
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-xs text-gray-400">生产周期</span>
+                                          <span className="text-xs text-gray-800">{version.leadTime} 天</span>
+                                        </div>
 
-                                            {/* 采购单价 */}
-                                            <div>
-                                              <p className="text-xs text-gray-400 mb-1">采购单价</p>
-                                              <div className="flex items-center gap-2">
-                                                <p className="font-medium text-gray-800">{formatPrice(version.unitPrice)}</p>
-                                                {priceChange && priceChange.type !== 'same' && (
-                                                  <span className={`text-xs ${
-                                                    priceChange.type === 'up' ? 'text-red-500' : 'text-green-500'
-                                                  }`}>
-                                                    {priceChange.percent}
-                                                  </span>
-                                                )}
-                                              </div>
-                                            </div>
+                                        {/* 供应商 */}
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-xs text-gray-400">供应商</span>
+                                          <span className="text-xs text-gray-800 truncate max-w-[120px]" title={version.supplierName}>
+                                            {version.supplierName.length > 10 ? version.supplierName.slice(0, 10) + '...' : version.supplierName}
+                                          </span>
+                                        </div>
 
-                                            {/* 生产周期 */}
-                                            <div>
-                                              <p className="text-xs text-gray-400 mb-1">生产周期</p>
-                                              <div className="flex items-center gap-1">
-                                                <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                                <p className="text-gray-800">{version.leadTime} 天</p>
-                                              </div>
-                                            </div>
+                                        {/* 版本备注/迭代原因 */}
+                                        <div className="pt-2 mt-2 border-t">
+                                          <p className="text-xs text-gray-400 mb-1">
+                                            {version.type === 'initial' ? '备注' : '迭代原因'}
+                                          </p>
+                                          <p className="text-xs text-gray-600 line-clamp-2" title={version.type === 'initial' ? version.remark : version.iterationReason}>
+                                            {version.type === 'initial' ? version.remark : version.iterationReason}
+                                          </p>
+                                        </div>
 
-                                            {/* 供应商 */}
-                                            <div>
-                                              <p className="text-xs text-gray-400 mb-1">供应商</p>
-                                              <div className="flex items-center gap-1">
-                                                <Building2 className="w-3.5 h-3.5 text-gray-400" />
-                                                <p className="text-gray-800 text-xs truncate max-w-[150px]" title={version.supplierName}>
-                                                  {version.supplierName}
-                                                </p>
-                                              </div>
-                                            </div>
-
-                                            {/* 操作 */}
-                                            <div className="flex items-end justify-end">
-                                              <button className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700">
-                                                <Edit2 className="w-3 h-3" />
-                                                编辑
-                                              </button>
-                                            </div>
-                                          </div>
-
-                                          {/* 版本备注/迭代原因 */}
-                                          <div className="mt-3 pt-3 border-t">
-                                            <p className="text-xs text-gray-400 mb-1">
-                                              {version.type === 'initial' ? '版本备注' : '迭代原因'}
-                                            </p>
-                                            <p className="text-sm text-gray-600">
-                                              {version.type === 'initial' ? version.remark : version.iterationReason}
-                                            </p>
-                                          </div>
+                                        {/* 操作按钮 */}
+                                        <div className="pt-2 flex justify-end">
+                                          <button className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700">
+                                            <Edit2 className="w-3 h-3" />
+                                            编辑
+                                          </button>
                                         </div>
                                       </div>
                                     </div>
