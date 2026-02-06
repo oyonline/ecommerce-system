@@ -138,41 +138,41 @@ export default function StoreDeptMappingPage() {
         {/* 表格 */}
         <div className="flex-1 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col">
           <div className="flex-1 overflow-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[1400px]">
             <thead className="bg-gray-50 sticky top-0">
               <tr className="border-b">
-                <th className="px-4 py-3 text-left text-gray-600">金蝶店铺ID</th>
-                <th className="px-4 py-3 text-left text-gray-600">金蝶店铺名称</th>
-                <th className="px-4 py-3 text-left text-gray-600">客户分组</th>
-                <th className="px-4 py-3 text-left text-gray-600">金蝶归属组织</th>
-                <th className="px-4 py-3 text-left text-gray-600">状态</th>
-                <th className="px-4 py-3 text-left text-gray-600">所属地区</th>
-                <th className="px-4 py-3 text-left text-gray-600">当前生效</th>
-                <th className="px-4 py-3 text-left text-gray-600">生效日期</th>
-                <th className="px-4 py-3 text-left text-gray-600">归属部门</th>
-                <th className="px-4 py-3 text-left text-gray-600">关联成本中心</th>
-                <th className="px-4 py-3 text-left text-gray-600">拉取时间</th>
-                <th className="px-4 py-3 text-left text-gray-600">备注</th>
-                <th className="px-4 py-3 text-left text-gray-600">操作</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">金蝶店铺ID</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">金蝶店铺名称</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">客户分组</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">金蝶归属组织</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">状态</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">所属地区</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">当前生效</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">生效日期</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap min-w-[180px]">归属部门</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap min-w-[200px]">关联成本中心</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">拉取时间</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">备注</th>
+                <th className="px-4 py-3 text-left text-gray-600 whitespace-nowrap">操作</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((s, idx) => (
                 <tr key={s.id} className={`border-b ${idx % 2 ? 'bg-gray-50' : ''} hover:bg-gray-100`}>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2 text-gray-900">
-                      <StoreIcon className="w-4 h-4 text-gray-400" />
+                      <StoreIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
                       {s.storeId}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">{s.storeName}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{s.storeName}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <span className="px-2 py-1 rounded text-xs bg-purple-50 text-purple-700 border border-purple-200">
                       {s.customerGroup}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">{s.kingdeeOrgCode}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{s.kingdeeOrgCode}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {s.status === 'active'
                       ? <span className="px-2 py-1 rounded text-xs bg-green-50 text-green-700 border border-green-200">启用</span>
                       : s.status === 'inactive'
@@ -180,12 +180,12 @@ export default function StoreDeptMappingPage() {
                       : <span className="px-2 py-1 rounded text-xs bg-red-50 text-red-700 border border-red-200">禁用</span>
                     }
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Globe className="w-4 h-4" /> {s.country}
+                      <Globe className="w-4 h-4 flex-shrink-0" /> {s.country}
                     </div>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {s.isActive
                       ? <span className="px-2 py-1 rounded text-xs bg-green-50 text-green-700 border border-green-200 inline-flex items-center gap-1">
                           <span className="w-2 h-2 rounded-full bg-green-500" /> 生效中
@@ -193,17 +193,17 @@ export default function StoreDeptMappingPage() {
                       : <span className="px-2 py-1 rounded text-xs bg-gray-50 text-gray-500 border border-gray-200">已失效</span>
                     }
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{s.effectiveDate}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{s.effectiveDate}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2 text-gray-700">
-                      <Building2 className="w-4 h-4 text-gray-400" />
+                      <Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
                       {s.departmentName}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-blue-600">{s.costCenterName}</td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">{s.lastSyncTime || '-'}</td>
-                  <td className="px-4 py-3 text-gray-500 text-xs">{s.remarks || '-'}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 text-blue-600 whitespace-nowrap">{s.costCenterName}</td>
+                  <td className="px-4 py-3 text-gray-600 text-xs whitespace-nowrap">{s.lastSyncTime || '-'}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">{s.remarks || '-'}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <button
                       onClick={() => handleEdit(s)}
                       className="px-2 py-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded text-sm flex items-center gap-1"
