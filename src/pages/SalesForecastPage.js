@@ -264,26 +264,26 @@ const SalesForecastPage = () => {
   return (
     <div className="flex flex-col h-full bg-gray-50">
       {/* 顶部信息栏 */}
-      <div className="bg-white border-b px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h2 className="text-lg font-semibold text-gray-800">销量预测</h2>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Calendar className="w-4 h-4" />
+      <div className="bg-white border-b px-4 py-3 flex-shrink-0">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-4 flex-wrap">
+            <h2 className="text-lg font-semibold text-gray-800 whitespace-nowrap">销量预测</h2>
+            <div className="flex items-center gap-2 text-sm text-gray-500 whitespace-nowrap">
+              <Calendar className="w-4 h-4 flex-shrink-0" />
               <span>预测周期：{forecastMonths[0].label} - {forecastMonths[11].label}</span>
             </div>
-            <div className="flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs">
-              <Lock className="w-3 h-3" />
+            <div className="flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs whitespace-nowrap">
+              <Lock className="w-3 h-3 flex-shrink-0" />
               <span>冻结期：{forecastMonths[0].shortLabel} - {forecastMonths[1].shortLabel}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-sm text-gray-500">
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="text-sm text-gray-500 whitespace-nowrap">
               已确认: <span className="font-medium text-green-600">{stats.confirmedCount}</span> / {stats.totalSkus} SKU
             </div>
             <button
               onClick={confirmAll}
-              className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+              className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700 whitespace-nowrap"
             >
               <Check className="w-4 h-4" />
               全部确认
@@ -377,7 +377,7 @@ const SalesForecastPage = () => {
 
       {/* 数据表格 */}
       <div className="flex-1 overflow-auto">
-        <table className="w-full text-sm border-collapse">
+        <table className="w-full text-sm border-collapse min-w-[1500px]">
           <thead className="bg-gray-100 sticky top-0 z-10">
             <tr>
               <th className="px-3 py-2 text-left font-medium text-gray-600 border-b border-r bg-gray-100 sticky left-0 z-20 min-w-[280px]">
