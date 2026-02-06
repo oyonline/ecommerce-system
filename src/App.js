@@ -43,6 +43,7 @@ import BudgetVersionPage from './pages/BudgetVersionPage';
 import BudgetVersionDetailPage from './pages/BudgetVersionDetailPage';
 import SupplierListPage from './pages/SupplierListPage';
 import SkuIterationPage from './pages/SkuIterationPage';
+import SalesForecastPage from './pages/SalesForecastPage';
 
 // 导航配置
 const navigationConfig = [
@@ -474,6 +475,8 @@ function App() {
                 return <OrganizationManagementPage />;
             case '/sales/target':
                 return <SalesTargetPage />;
+            case '/sales/forecast':
+                return <SalesForecastPage />;
             case '/procurement/supplier':
                 return <SupplierListPage onOpenDetail={openTab} />;
             case '/procurement/sku-iteration':

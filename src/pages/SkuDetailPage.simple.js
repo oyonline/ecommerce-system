@@ -467,13 +467,25 @@ function SpecialInstructions() {
         },
     ];
 
-    // 根据 partsData 长度自动生成“对齐编号”的初始点位（占位坐标，后续可拖拽）
-    const makeInitialMarkers = (count) =>
-        Array.from({ length: count }, (_, i) => {
+    // 根据 partsData 长度自动生成随机分布的初始点位（后续可拖拽）
+    const makeInitialMarkers = (count) => {
+        // 使用固定种子的伪随机，确保每次渲染位置一致
+        const seededRandom = (seed) => {
+            const x = Math.sin(seed * 9999) * 10000;
+            return x - Math.floor(x);
+        };
+
+        return Array.from({ length: count }, (_, i) => {
             const id = i + 1;
-            const y = 10 + i * (80 / Math.max(count - 1, 1)); // 10%~90% 平均分布
-            return { id, anchor: { x: 30, y }, label: { x: 15, y } };
+            // 随机分布在图片区域内，避免太靠边
+            const anchorX = 15 + seededRandom(id * 7) * 70; // 15% ~ 85%
+            const anchorY = 10 + seededRandom(id * 13) * 75; // 10% ~ 85%
+            // 标签位置相对锚点偏移
+            const labelX = Math.min(Math.max(anchorX + (seededRandom(id * 17) - 0.5) * 20, 5), 95);
+            const labelY = Math.min(Math.max(anchorY - 8 - seededRandom(id * 23) * 5, 2), 90);
+            return { id, anchor: { x: anchorX, y: anchorY }, label: { x: labelX, y: labelY } };
         });
+    };
 
     const [markers, setMarkers] = useState(() => makeInitialMarkers(partsData.length));
     const [dragging, setDragging] = useState(null); // {id, type:'anchor'|'label'}
