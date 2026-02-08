@@ -344,16 +344,16 @@ const RuleCard = ({ rule, onEdit, onCopy, onToggle, onViewLogs, isExpanded, onTo
                             <span className="text-sm font-medium text-gray-700">字段配置</span>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
+                            <table className="w-full text-sm min-w-[700px]">
                                 <thead>
                                     <tr className="bg-gray-50">
-                                        <th className="px-3 py-2 text-left font-medium text-gray-600">序号</th>
-                                        <th className="px-3 py-2 text-left font-medium text-gray-600">字段名称</th>
-                                        <th className="px-3 py-2 text-left font-medium text-gray-600">类型</th>
-                                        <th className="px-3 py-2 text-left font-medium text-gray-600">长度</th>
-                                        <th className="px-3 py-2 text-left font-medium text-gray-600">必填</th>
-                                        <th className="px-3 py-2 text-left font-medium text-gray-600">默认值</th>
-                                        <th className="px-3 py-2 text-left font-medium text-gray-600">示例</th>
+                                        <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">序号</th>
+                                        <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">字段名称</th>
+                                        <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">类型</th>
+                                        <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">长度</th>
+                                        <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">必填</th>
+                                        <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">默认值</th>
+                                        <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">示例</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">

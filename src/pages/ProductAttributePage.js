@@ -1011,17 +1011,17 @@ export default function ProductAttributePage() {
                         {/* 属性表格 */}
                         {expandedGroups.includes(group.id) && (
                             <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
+                                <table className="w-full text-sm min-w-[1000px]">
                                     <thead>
                                         <tr className="border-b border-gray-100">
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">状态</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">属性名称</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">编码 / 简写</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">类型</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">必填</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">选项数 / 单位</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">选项值示例</th>
-                                            <th className="px-4 py-3 text-left font-medium text-gray-600">操作</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">属性名称</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">编码 / 简写</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">类型</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">必填</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">选项数 / 单位</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">选项值示例</th>
+                                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">操作</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">

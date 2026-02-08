@@ -650,26 +650,26 @@ export default function SalesTargetPage() {
                           {/* 店铺列表 */}
                           {isDeptExpanded && (
                             <div className="overflow-x-auto">
-                              <table className="w-full text-sm">
+                              <table className="w-full text-sm min-w-[1400px]">
                                 <thead className="bg-gray-50 text-left">
                                   <tr>
-                                    <th className="px-4 py-2 pl-16 font-medium text-gray-600 w-48">店铺</th>
-                                    <th className="px-4 py-2 font-medium text-gray-600 w-24">平台</th>
-                                    <th className="px-4 py-2 font-medium text-gray-600 w-20">地区</th>
+                                    <th className="px-4 py-2 pl-16 font-medium text-gray-600 w-48 whitespace-nowrap">店铺</th>
+                                    <th className="px-4 py-2 font-medium text-gray-600 w-24 whitespace-nowrap">平台</th>
+                                    <th className="px-4 py-2 font-medium text-gray-600 w-20 whitespace-nowrap">地区</th>
                                     {viewMode === 'monthly' && MONTHS.map(m => (
-                                      <th key={m} className="px-2 py-2 font-medium text-gray-600 text-center w-20">{m}</th>
+                                      <th key={m} className="px-2 py-2 font-medium text-gray-600 text-center w-20 whitespace-nowrap">{m}</th>
                                     ))}
                                     {viewMode === 'quarterly' && ['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
-                                      <th key={q} className="px-4 py-2 font-medium text-gray-600 text-center w-28">{q}</th>
+                                      <th key={q} className="px-4 py-2 font-medium text-gray-600 text-center w-28 whitespace-nowrap">{q}</th>
                                     ))}
                                     {viewMode === 'yearly' && (
                                       <>
-                                        <th className="px-4 py-2 font-medium text-gray-600 text-right">年度目标</th>
-                                        <th className="px-4 py-2 font-medium text-gray-600 text-right">已完成</th>
-                                        <th className="px-4 py-2 font-medium text-gray-600 w-32">进度</th>
+                                        <th className="px-4 py-2 font-medium text-gray-600 text-right whitespace-nowrap">年度目标</th>
+                                        <th className="px-4 py-2 font-medium text-gray-600 text-right whitespace-nowrap">已完成</th>
+                                        <th className="px-4 py-2 font-medium text-gray-600 w-32 whitespace-nowrap">进度</th>
                                       </>
                                     )}
-                                    <th className="px-4 py-2 font-medium text-gray-600 w-20">操作</th>
+                                    <th className="px-4 py-2 font-medium text-gray-600 w-20 whitespace-nowrap">操作</th>
                                   </tr>
                                 </thead>
                                 <tbody>

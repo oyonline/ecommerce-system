@@ -476,7 +476,7 @@ const SkuIterationPage = ({ data: externalData }) => {
       {/* 表格区域 */}
       <div className="flex-1 bg-white rounded-lg shadow-sm flex flex-col overflow-hidden">
         <div className="flex-1 overflow-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[1000px]">
             <thead className="bg-gray-50 sticky top-0">
               <tr className="border-b">
                 <th className="px-4 py-3 text-left font-medium text-gray-600 w-10"></th>

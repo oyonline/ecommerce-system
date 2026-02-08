@@ -1118,22 +1118,22 @@ function ExpenseApprovalDetail({ onOpenDetail }) {
           {/* 审批单列表 */}
           <Card className="overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[1600px]">
                 <thead className="bg-gray-50">
                   <tr className="text-left">
-                    <th className="px-4 py-3 font-medium text-gray-700">飞书审批单号</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">提交人</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">提交部门</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">费用承担部门</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">客户分组</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">付款事由</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">核算维度</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">会计科目</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">付款金额</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">付款主体</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">预计付款日期</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">状态</th>
-                    <th className="px-4 py-3 font-medium text-gray-700">操作</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">飞书审批单号</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">提交人</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">提交部门</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">费用承担部门</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">客户分组</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">付款事由</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">核算维度</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">会计科目</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">付款金额</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">付款主体</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">预计付款日期</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">状态</th>
+                    <th className="px-4 py-3 font-medium text-gray-700 whitespace-nowrap">操作</th>
                   </tr>
                 </thead>
                 <tbody>

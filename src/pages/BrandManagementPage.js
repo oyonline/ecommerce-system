@@ -67,18 +67,18 @@ const BrandManagementPage = ({ data: externalData }) => {
       </div>
 
       <div className="flex-1 bg-white rounded-lg shadow-sm flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto">
-          <table className="w-full text-sm">
+        <div className="flex-1 overflow-auto">
+          <table className="w-full text-sm min-w-[900px]">
             <thead className="bg-gray-50 sticky top-0">
               <tr className="border-b">
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Logo</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">品牌名称</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">品牌编码</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">英文名/别名</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">状态</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">负责人</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">关联产品</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">更新时间</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">Logo</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">品牌名称</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">品牌编码</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">英文名/别名</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">负责人</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">关联产品</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">更新时间</th>
                 <th className="px-4 py-3 text-left font-medium text-gray-600">操作</th>
               </tr>
             </thead>

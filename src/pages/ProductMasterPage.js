@@ -343,7 +343,7 @@ export default function ProductMasterPage({ onOpenSkuDetail }) {
             <div className="flex-1 bg-white rounded-lg shadow-sm flex flex-col min-h-0">
                 {/* 顶部筛选区 */}
                 <div className="p-4 border-b">
-                    <div className="grid grid-cols-5 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                         <input
                             type="text"
                             placeholder="SKU"
@@ -390,20 +390,20 @@ export default function ProductMasterPage({ onOpenSkuDetail }) {
                 </div>
 
                 {/* 产品列表 */}
-                <div className="flex-1 overflow-y-auto">
-                    <table className="w-full text-sm">
+                <div className="flex-1 overflow-auto">
+                    <table className="w-full text-sm min-w-[1100px]">
                         <thead className="bg-gray-50 sticky top-0">
                         <tr className="border-b">
                             <th className="px-4 py-3 text-left font-medium text-gray-600 w-8"></th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">SPU</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">产品名称</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">品牌</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">类别</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">系列</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">销售类型</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">产品经理</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">SKU数</th>
-                            <th className="px-4 py-3 text-left font-medium text-gray-600">状态</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">SPU</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">产品名称</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">品牌</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">类别</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">系列</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">销售类型</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">产品经理</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">SKU数</th>
+                            <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
                         </tr>
                         </thead>
                         <tbody>

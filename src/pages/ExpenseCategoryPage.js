@@ -491,19 +491,19 @@ function ExpenseCategoryManagement() {
                     {/* 表格 */}
                     <div className="flex-1 overflow-auto p-8">
                         <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                            <table className="w-full text-sm">
+                            <table className="w-full text-sm min-w-[1200px]">
                                 <thead className="bg-gray-50">
                                 <tr className="text-left">
                                     <th className="w-12 px-3 py-2"><Checkbox
                                         checked={currentData.length > 0 && selectedRows.length === currentData.length}
                                         onChange={handleSelectAll}
                                     /></th>
-                                    <th className="min-w-[180px] px-3 py-2">预算类别编码</th>
-                                    <th className="min-w-[240px] px-3 py-2">预算类别名称</th>
-                                    <th className="w-[180px] px-3 py-2">数据来源</th>
-                                    <th className="w-[200px] px-3 py-2">数据状态</th>
-                                    <th className="min-w-[200px] px-3 py-2">描述</th>
-                                    <th className="w-[140px] px-3 py-2">更新日期</th>
+                                    <th className="min-w-[180px] px-3 py-2 whitespace-nowrap">预算类别编码</th>
+                                    <th className="min-w-[240px] px-3 py-2 whitespace-nowrap">预算类别名称</th>
+                                    <th className="w-[180px] px-3 py-2 whitespace-nowrap">数据来源</th>
+                                    <th className="w-[200px] px-3 py-2 whitespace-nowrap">数据状态</th>
+                                    <th className="min-w-[200px] px-3 py-2 whitespace-nowrap">描述</th>
+                                    <th className="w-[140px] px-3 py-2 whitespace-nowrap">更新日期</th>
                                     <th className="w-[50px] px-3 py-2"></th>
                                 </tr>
                                 </thead>
