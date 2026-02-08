@@ -245,8 +245,8 @@ export default function ExpenseApprovalListPageSimple({ records = [], onOpenDeta
 
             {/* 工具栏 */}
             <div className="bg-white border-b border-gray-200 px-8 py-4">
-                <div className="flex items-center gap-3">
-                    <div className="relative w-96">
+                <div className="flex items-center gap-3 flex-wrap">
+                    <div className="relative w-full max-w-md min-w-[200px]">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                             className="w-full h-9 pl-9 pr-3 rounded border border-gray-300 text-sm outline-none focus:ring-2 focus:ring-blue-200"
@@ -261,17 +261,17 @@ export default function ExpenseApprovalListPageSimple({ records = [], onOpenDeta
 
             {/* 列表 */}
             <div className="flex-1 overflow-auto p-6">
-                <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-                    <table className="w-full text-sm">
+                <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-auto">
+                    <table className="w-full text-sm min-w-[900px]">
                         <thead className="bg-gray-50 text-gray-600">
                         <tr>
-                            <th className="text-left font-medium px-4 py-2">审批单号</th>
-                            <th className="text-left font-medium px-4 py-2">提交人</th>
-                            <th className="text-left font-medium px-4 py-2">提交部门</th>
-                            <th className="text-left font-medium px-4 py-2">申请金额</th>
-                            <th className="text-left font-medium px-4 py-2">币种</th>
-                            <th className="text-left font-medium px-4 py-2">状态</th>
-                            <th className="text-left font-medium px-4 py-2">提交时间</th>
+                            <th className="text-left font-medium px-4 py-2 whitespace-nowrap">审批单号</th>
+                            <th className="text-left font-medium px-4 py-2 whitespace-nowrap">提交人</th>
+                            <th className="text-left font-medium px-4 py-2 whitespace-nowrap">提交部门</th>
+                            <th className="text-left font-medium px-4 py-2 whitespace-nowrap">申请金额</th>
+                            <th className="text-left font-medium px-4 py-2 whitespace-nowrap">币种</th>
+                            <th className="text-left font-medium px-4 py-2 whitespace-nowrap">状态</th>
+                            <th className="text-left font-medium px-4 py-2 whitespace-nowrap">提交时间</th>
                         </tr>
                         </thead>
                         <tbody>

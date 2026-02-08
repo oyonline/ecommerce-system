@@ -285,7 +285,7 @@ const BOMManagement = () => {
       {/* 顶部筛选区 */}
       <div className="bg-white shadow-sm p-4">
         <h2 className="text-xl font-bold mb-4">BOM 管理</h2>
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           <input
             type="text"
             placeholder="BOM 编码"
@@ -334,20 +334,20 @@ const BOMManagement = () => {
       {/* BOM 列表 */}
       <div className="flex-1 overflow-hidden p-4">
         <div className="bg-white rounded-lg shadow-sm h-full flex flex-col">
-          <div className="flex-1 overflow-y-auto">
-            <table className="w-full text-sm">
+          <div className="flex-1 overflow-auto">
+            <table className="w-full text-sm min-w-[1200px]">
               <thead className="bg-gray-50 sticky top-0">
                 <tr className="border-b">
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">BOM 编码</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">BOM 类型</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">适用对象</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">当前版本</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">状态</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">生效日期</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">组件数</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">责任人</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">组装供应商</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">操作</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">BOM 编码</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">BOM 类型</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">适用对象</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">当前版本</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">生效日期</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">组件数</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">责任人</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">组装供应商</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">操作</th>
                 </tr>
               </thead>
               <tbody>

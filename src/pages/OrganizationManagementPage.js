@@ -147,8 +147,8 @@ export default function OrganizationManagementPageSimple() {
 
       {/* 工具条 */}
       <div className="bg-white border-b border-gray-200 px-8 py-4">
-        <div className="flex items-center justify-between gap-3">
-          <div className="relative w-full max-w-md">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="relative w-full max-w-md min-w-[200px]">
             <input
               type="text"
               placeholder="搜索部门名称、编码或负责人..."
@@ -157,25 +157,25 @@ export default function OrganizationManagementPageSimple() {
               className="w-full h-10 pl-3 pr-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={expandAll} className="h-10 px-3 rounded border text-gray-700 hover:bg-gray-50">
+          <div className="flex items-center gap-2 flex-wrap">
+            <button onClick={expandAll} className="h-10 px-3 rounded border text-gray-700 hover:bg-gray-50 whitespace-nowrap">
               全部展开
             </button>
-            <button onClick={collapseAll} className="h-10 px-3 rounded border text-gray-700 hover:bg-gray-50">
+            <button onClick={collapseAll} className="h-10 px-3 rounded border text-gray-700 hover:bg-gray-50 whitespace-nowrap">
               全部收起
             </button>
-            <button onClick={handleAdd} className="h-10 px-3 rounded bg-blue-600 text-white hover:bg-blue-700">
+            <button onClick={handleAdd} className="h-10 px-3 rounded bg-blue-600 text-white hover:bg-blue-700 whitespace-nowrap">
               新增部门
             </button>
-            <button className="h-10 px-3 rounded border text-gray-700 hover:bg-gray-50">导出数据</button>
+            <button className="h-10 px-3 rounded border text-gray-700 hover:bg-gray-50 whitespace-nowrap">导出数据</button>
           </div>
         </div>
       </div>
 
       {/* 表格 */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <table className="w-full text-sm">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-auto">
+          <table className="w-full text-sm min-w-[1100px]">
             <thead className="bg-gray-50 text-left">
               <tr>
                 <th className="w-12 p-3">
@@ -185,15 +185,15 @@ export default function OrganizationManagementPageSimple() {
                     onChange={(e) => handleSelectAll(e.target.checked)}
                   />
                 </th>
-                <th className="p-3">部门名称</th>
-                <th className="p-3">金蝶部门编码</th>
-                <th className="p-3">类型</th>
-                <th className="p-3">负责人</th>
-                <th className="p-3">预算编制</th>
-                <th className="p-3">实际</th>
-                <th className="p-3">层级</th>
-                <th className="p-3">更新日期</th>
-                <th className="p-3">状态</th>
+                <th className="p-3 whitespace-nowrap">部门名称</th>
+                <th className="p-3 whitespace-nowrap">金蝶部门编码</th>
+                <th className="p-3 whitespace-nowrap">类型</th>
+                <th className="p-3 whitespace-nowrap">负责人</th>
+                <th className="p-3 whitespace-nowrap">预算编制</th>
+                <th className="p-3 whitespace-nowrap">实际</th>
+                <th className="p-3 whitespace-nowrap">层级</th>
+                <th className="p-3 whitespace-nowrap">更新日期</th>
+                <th className="p-3 whitespace-nowrap">状态</th>
               </tr>
             </thead>
             <tbody>

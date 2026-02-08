@@ -886,19 +886,19 @@ export default function CostCenterPage() {
             {/* 数据表格 */}
             <Card className="overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                    <table className="w-full text-sm min-w-[1200px]">
                         <thead>
                             <tr className="bg-gray-50 border-b">
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">状态</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">成本中心名称</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">编码</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">启用时间</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">归属部门</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">关联客户分组</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">创建人</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">创建日期</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">备注</th>
-                                <th className="px-4 py-3 text-left font-medium text-gray-600">操作</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">成本中心名称</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">编码</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">启用时间</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">归属部门</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">关联客户分组</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">创建人</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">创建日期</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">备注</th>
+                                <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">操作</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">

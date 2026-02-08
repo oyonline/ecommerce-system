@@ -453,7 +453,7 @@ const SupplierListPage = ({ data: externalData, onOpenDetail }) => {
       {/* 表格区域 */}
       <div className="flex-1 bg-white rounded-lg shadow-sm flex flex-col overflow-hidden">
         <div className="flex-1 overflow-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[1300px]">
             <thead className="bg-gray-50 sticky top-0">
               <tr className="border-b">
                 <th className="px-4 py-3 text-left font-medium text-gray-600 whitespace-nowrap">供应商编码</th>
@@ -491,13 +491,13 @@ const SupplierListPage = ({ data: externalData, onOpenDetail }) => {
                   <td className="px-4 py-3">{supplier.contact}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-1 text-xs text-gray-600">
-                        <Phone className="w-3 h-3" />
+                      <div className="flex items-center gap-1 text-xs text-gray-600 whitespace-nowrap">
+                        <Phone className="w-3 h-3 flex-shrink-0" />
                         {supplier.phone}
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-gray-400 truncate max-w-[150px]" title={supplier.email}>
-                        <Mail className="w-3 h-3" />
-                        {supplier.email}
+                      <div className="flex items-center gap-1 text-xs text-gray-400 whitespace-nowrap">
+                        <Mail className="w-3 h-3 flex-shrink-0" />
+                        <span className="truncate max-w-[120px]" title={supplier.email}>{supplier.email}</span>
                       </div>
                     </div>
                   </td>
