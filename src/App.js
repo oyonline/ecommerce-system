@@ -44,6 +44,7 @@ import BudgetVersionDetailPage from './pages/BudgetVersionDetailPage';
 import SupplierListPage from './pages/SupplierListPage';
 import SkuIterationPage from './pages/SkuIterationPage';
 import SalesForecastPage from './pages/SalesForecastPage';
+import VirtualComboPage from './pages/VirtualComboPage';
 
 // 导航配置
 const navigationConfig = [
@@ -56,6 +57,7 @@ const navigationConfig = [
         children: [
             {id: 'product-master', name: '产品主数据', path: '/product/master'},
             {id: 'product-bom', name: 'BOM 管理', path: '/product/bom'},
+            {id: 'product-virtual-combo', name: '虚拟组合管理', path: '/product/virtual-combo'},
             {id: 'product-brand', name: '品牌管理', path: '/product/brand'},
             {id: 'product-structure', name: '产品结构分类', path: '/product/structure'},
             {id: 'product-template', name: '类目属性模板管理', path: '/product/template'},
@@ -328,6 +330,8 @@ function App() {
                 );
             case '/product/bom':
                 return <BOMManagementPage />;
+            case '/product/virtual-combo':
+                return <VirtualComboPage />;
             case '/product/brand':
                 return <BrandManagementPage />;
             case '/product/structure':
