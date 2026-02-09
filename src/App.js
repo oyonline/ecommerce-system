@@ -45,6 +45,7 @@ import SupplierListPage from './pages/SupplierListPage';
 import SkuIterationPage from './pages/SkuIterationPage';
 import SalesForecastPage from './pages/SalesForecastPage';
 import VirtualComboPage from './pages/VirtualComboPage';
+import SalesProductPage from './pages/SalesProductPage';
 
 // 导航配置
 const navigationConfig = [
@@ -83,6 +84,7 @@ const navigationConfig = [
         name: '销售与计划',
         icon: TrendingUp,
         children: [
+            {id: 'sales-product', name: '销售主数据', path: '/sales/product'},
             {id: 'sales-target', name: '销售目标', path: '/sales/target'},
             {id: 'sales-data-aggregation', name: '数据聚合分析', path: '/sales/data-aggregation'},
             {id: 'sales-slow-moving', name: '滞销分析', path: '/sales/slow-moving'},
@@ -414,6 +416,8 @@ function App() {
                 );
             case '/organization/structure':
                 return <OrganizationManagementPage />;
+            case '/sales/product':
+                return <SalesProductPage />;
             case '/sales/target':
                 return <SalesTargetPage />;
             case '/sales/forecast':
