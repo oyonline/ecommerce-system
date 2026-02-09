@@ -49,7 +49,19 @@ import VirtualComboPage from './pages/VirtualComboPage';
 // 导航配置
 const navigationConfig = [
     {id: 'home', name: '首页', icon: Home, path: '/home'},
-    {id: 'dashboard', name: '经营驾驶舱', icon: BarChart3, path: '/dashboard', badge: '管理层'},
+    {
+        id: 'dashboard',
+        name: '经营驾驶舱',
+        icon: BarChart3,
+        badge: '管理层',
+        children: [
+            {id: 'dashboard-overview', name: '经营概览', path: '/dashboard/overview'},
+            {id: 'dashboard-sales', name: '销售达成分析', path: '/dashboard/sales'},
+            {id: 'dashboard-procurement', name: '采购分析', path: '/dashboard/procurement'},
+            {id: 'dashboard-logistics', name: '物流分析', path: '/dashboard/logistics'},
+            {id: 'dashboard-quality', name: '质量分析', path: '/dashboard/quality'}
+        ]
+    },
     {
         id: 'product',
         name: '产品中心',
@@ -72,7 +84,6 @@ const navigationConfig = [
         icon: TrendingUp,
         children: [
             {id: 'sales-target', name: '销售目标', path: '/sales/target'},
-            {id: 'sales-analysis', name: '销售达成分析', path: '/sales/analysis'},
             {id: 'sales-data-aggregation', name: '数据聚合分析', path: '/sales/data-aggregation'},
             {id: 'sales-slow-moving', name: '滞销分析', path: '/sales/slow-moving'},
             {id: 'sales-forecast', name: '销量预测', path: '/sales/forecast'},
@@ -112,8 +123,7 @@ const navigationConfig = [
         icon: TestTube,
         children: [
             {id: 'quality-inbound', name: '入库质检', path: '/quality/inbound'},
-            {id: 'quality-complaint', name: '客诉质量', path: '/quality/complaint'},
-            {id: 'quality-analysis', name: '质量分析', path: '/quality/analysis'}
+            {id: 'quality-complaint', name: '客诉质量', path: '/quality/complaint'}
         ]
     },
     {
